@@ -1,16 +1,32 @@
 {
   "files": {
-    "main.css": "/static/css/main.776b7ada.css",
-    "main.js": "/static/js/main.0b58de49.js",
-    "static/media/kyle.png": "/static/media/kyle.9f6c81817f93e45c04ba.png",
-    "static/media/portfolioImage.jpg": "/static/media/portfolioImage.6db636c7ad24cf5611eb.jpg",
-    "static/media/hero.png": "/static/media/hero.caa3d5e2872e84d77cf2.png",
+    "main.css": "/static/css/main.4119fccf.css",
+    "main.js": "/static/js/main.3cfa0e74.js",
+    "static/media/restaurant-landing-page.PNG": "/static/media/restaurant-landing-page.c6598eae570f40b5d746.PNG",
+    "static/media/breaking-bad-cast.PNG": "/static/media/breaking-bad-cast.8af3c038a877b2160caa.PNG",
+    "static/media/nature-tours.PNG": "/static/media/nature-tours.cc0671483d9031086ddc.PNG",
+    "static/media/cocktail-recipe-app.PNG": "/static/media/cocktail-recipe-app.0a602c4a2ecbc46495fc.PNG",
+    "static/media/modern-youtube-app.PNG": "/static/media/modern-youtube-app.6475c54c4bb9f26f3619.PNG",
+    "static/media/spotify-clone.PNG": "/static/media/spotify-clone.aacf8218eaa572b2405e.PNG",
+    "static/media/photography-website.PNG": "/static/media/photography-website.28537e93cf70f9ce9ef1.PNG",
+    "static/media/metaverse-lanidng-page.png": "/static/media/metaverse-lanidng-page.5857a32801c44c570b95.png",
+    "static/media/video-platform-website.PNG": "/static/media/video-platform-website.fd29796cc8705a9da362.PNG",
+    "static/media/kyle-portrait-white-square-2.jpg": "/static/media/kyle-portrait-white-square-2.a67e07fde4355c45fe9b.jpg",
+    "static/media/fashion-studio-website.jpg": "/static/media/fashion-studio-website.f4bb9bfecc575776c6d8.jpg",
+    "static/media/crypto-screener-cover-image.jpg": "/static/media/crypto-screener-cover-image.de541b408e2ae10b1111.jpg",
+    "static/media/admin-dashboard.PNG": "/static/media/admin-dashboard.007e070f4ec9271b8690.PNG",
+    "static/media/agency-website-cover-image.jpg": "/static/media/agency-website-cover-image.db69a33e9508887004cf.jpg",
+    "static/media/nft-collection-website-cover-image.jpg": "/static/media/nft-collection-website-cover-image.9b8772ff11f7777f98da.jpg",
+    "static/media/profile-pic.jpg": "/static/media/profile-pic.05ee949366669fded4be.jpg",
+    "static/media/cryptocurrency-dashboard.PNG": "/static/media/cryptocurrency-dashboard.44d921db95f233ff0d50.PNG",
+    "static/media/wordle-clone.PNG": "/static/media/wordle-clone.a0d2771191889de828a4.PNG",
+    "static/media/miscellaneous_icons_1.svg": "/static/media/miscellaneous_icons_1.6c3ac7d35534df8ea6b1daee4b0f0ee1.svg",
     "index.html": "/index.html",
-    "main.776b7ada.css.map": "/static/css/main.776b7ada.css.map",
-    "main.0b58de49.js.map": "/static/js/main.0b58de49.js.map"
+    "main.4119fccf.css.map": "/static/css/main.4119fccf.css.map",
+    "main.3cfa0e74.js.map": "/static/js/main.3cfa0e74.js.map"
   },
   "entrypoints": [
-    "static/css/main.776b7ada.css",
-    "static/js/main.0b58de49.js"
+    "static/css/main.4119fccf.css",
+    "static/js/main.3cfa0e74.js"
   ]
 }
