@@ -1,0 +1,12 @@
+#hero-button {
+  transition: all 250ms ease-in-out !important;
+}
+
+#hero-button:hover {
+  background-color: #293c6b !important;
+  transform: scale(1.05);
+}
+
+.nav-link.active {
+  font-weight: 500;
+}
