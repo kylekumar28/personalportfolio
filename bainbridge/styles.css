@@ -10,3 +10,25 @@
 .nav-link.active {
   font-weight: 500;
 }
+
+#portfolio-card {
+  width: 150px;
+  height: 500px;
+  margin: 10px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  transition: width 0.5s, box-shadow 0.5s;
+  border-radius: 12px;
+}
+
+#portfolio-card-text {
+  opacity: 0;
+  bottom: 0;
+  transition: bottom 0.5s, opacity 0.5s;
+}
+
+#portfolio-card:hover #portfolio-card-text {
+  opacity: 1;
+  bottom: 25px;
+}

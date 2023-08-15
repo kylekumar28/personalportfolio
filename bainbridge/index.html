@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="./styles.css" />
     <title>McCarthy Bainbridge Ltd</title>
   </head>
-  <body style="background-color: #eeeeee">
+  <body style="background-color: #eee">
     <!-- Header -->
     <nav class="navbar navbar-expand-lg mt-3">
       <div class="container">
         <a class="navbar-brand" href="#">
-          <img src="./img/logo.png" />
+          <img src="/img/logo.png" />
         </a>
         <button
           class="navbar-toggler"
@@ -80,7 +80,7 @@
           </button>
         </div>
         <div class="col">
-          <img class="w-100" src="./img/hero-image.png" alt="" />
+          <img class="w-100" src="/img/hero-image.png" alt="" />
         </div>
       </div>
     </div>
@@ -437,5 +437,157 @@
     <hr class="border border-dark-subtle container" />
 
     <!-- Portfolio -->
+    <div class="container mb-5 mt-5">
+      <h1
+        class="display-5 me-2"
+        style="
+          letter-spacing: 3.968px !important;
+          font-style: normal !important;
+          font-weight: 400 !important;
+          line-height: normal !important;
+          color: #14213d !important;
+          text-decoration: underline;
+        "
+      >
+        Portfolio
+      </h1>
+
+      <div
+        class="mt-4"
+        style="
+          width: 100%;
+          height: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <div
+          style="display: flex; align-items: center; justify-content: center"
+        >
+          <div
+            id="portfolio-card"
+            style="
+              height: 500px;
+              margin: 10px;
+              background: url('./img/portfolio-1.png');
+              background-size: cover;
+              background-position: center;
+              position: relative;
+            "
+          >
+            <h3
+              id="portfolio-card-text"
+              style="position: absolute; left: 30px; color: #fff"
+            >
+              Minimalism & Modern
+            </h3>
+          </div>
+          <div
+            id="portfolio-card"
+            style="
+              height: 500px;
+              margin: 10px;
+              background: url('./img/portfolio-2.png');
+              background-size: cover;
+              background-position: center;
+              position: relative;
+            "
+          >
+            <h3
+              id="portfolio-card-text"
+              style="position: absolute; left: 30px; color: #fff"
+            >
+              Minimalism & Modern
+            </h3>
+          </div>
+          <div
+            id="portfolio-card"
+            style="
+              height: 500px;
+              margin: 10px;
+              background: url('./img/portfolio-3.png');
+              background-size: cover;
+              background-position: center;
+              position: relative;
+            "
+          >
+            <h3
+              id="portfolio-card-text"
+              style="position: absolute; left: 30px; color: #fff"
+            >
+              Minimalism & Modern
+            </h3>
+          </div>
+          <div
+            id="portfolio-card"
+            style="
+              height: 500px;
+              margin: 10px;
+              background: url('./img/portfolio-4.png');
+              background-size: cover;
+              background-position: center;
+              position: relative;
+            "
+          >
+            <h3
+              id="portfolio-card-text"
+              style="position: absolute; left: 30px; color: #fff"
+            >
+              Minimalism & Modern
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const portfolioCards = document.querySelectorAll('#portfolio-card');
+      const portfolioCardsTexts = document.querySelectorAll(
+        '#portfolio-card-text'
+      );
+      const firstCard = portfolioCards[0];
+      const firstCardText = firstCard.querySelector('#portfolio-card-text');
+
+      firstCard.style.width = '600px';
+      firstCardText.style.opacity = '1';
+      firstCardText.style.bottom = '25px';
+      firstCard.style.boxShadow = '0px 0.5rem 1rem rgba(0, 0, 0, 0.75)';
+
+      portfolioCards.forEach((card, index) => {
+        card.addEventListener('mouseenter', () => {
+          if (card !== firstCard) {
+            firstCard.style.width = '100px';
+            firstCard.style.boxShadow = 'none';
+            firstCardText.style.opacity = '0';
+            firstCardText.style.bottom = '0';
+          }
+
+          card.style.width = '600px';
+          card.style.boxShadow = '0px 0.5rem 1rem rgba(0, 0, 0, 0.75)'; // Apply box shadow to the hovered card
+          portfolioCardsTexts[index].style.opacity = '1'; // Show the text of the hovered card
+          portfolioCardsTexts[index].style.bottom = '25px'; // Set the bottom position of the text
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.width = '150px'; // Reset width of the hovered card when the cursor leaves
+          card.style.boxShadow = 'none';
+          portfolioCardsTexts[index].style.opacity = '0'; // Hide the text of the hovered card
+          portfolioCardsTexts[index].style.bottom = '0'; // Reset the bottom position of the text
+          if (
+            !Array.from(portfolioCards).some(
+              (otherCard) => otherCard !== card && otherCard.matches(':hover')
+            )
+          ) {
+            // If no other cards are hovered, show the first card's text and maintain its width
+            firstCard.style.width = '600px';
+            firstCard.style.boxShadow = '0px 0.5rem 1rem rgba(0, 0, 0, 0.75)'; // Apply box shadow to the first card
+            firstCardText.style.opacity = '1';
+            firstCardText.style.opacity = '1';
+            firstCardText.style.bottom = '25px';
+          }
+        });
+      });
+    </script>
   </body>
 </html>
