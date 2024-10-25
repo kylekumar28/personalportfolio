@@ -1,0 +1,378 @@
+/* General Reset */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Arial", sans-serif;
+}
+
+body {
+	background-color: #0b0f1a;
+	color: #fff;
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+/* Header Section */
+.header {
+	position: relative;
+	padding-top: 50px;
+	padding-bottom: 150px;
+	/*     padding: 150px 0; */
+	text-align: center;
+	color: #fff;
+	position: relative;
+	z-index: 2;
+}
+
+.header::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: url("https://static1.bigstockphoto.com/1/0/7/large1500/70160449.jpg");
+	box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.75);
+	filter: blur(8px);
+	-webkit-filter: blur(8px);
+	background-size: cover;
+	background-position: center;
+	z-index: -1;
+}
+
+.navbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 60px;
+}
+
+.nav-menu {
+	list-style: none;
+	display: flex;
+	gap: 30px;
+}
+
+.nav-menu a {
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.nav-actions a {
+	margin-left: 15px;
+}
+
+.btn {
+	padding: 10px 20px;
+	border-radius: 5px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-decoration: none;
+	transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+	background-color: #0085ff;
+	color: #fff;
+}
+
+.btn-secondary {
+	background-color: transparent;
+	color: #fff;
+	border: 2px solid #fff;
+}
+
+.hero {
+	margin-top: 50px;
+	margin-bottom: 100px;
+}
+
+.hero-title {
+	font-size: 70px;
+	font-weight: bold;
+	color: #fff;
+	margin-bottom: 50px;
+	text-decoration: none;
+	line-height: 6rem;
+	margin-top: 120px;
+}
+
+.subtitle-wrapper {
+	border-radius: 25px;
+	outline: #ffffff;
+	position: relative;
+}
+
+.subtitle-wrapper::before {
+	content: "";
+	left: 0;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.5;
+}
+
+.hero-subtitle {
+	font-size: 24px;
+	color: #ffffff;
+	/* border: 1px solid #0085ff; */
+	/* width: 750px; */
+	/* margin: 0 auto; */
+	margin-bottom: 4rem;
+	padding: 15px 30px;
+	/* border-radius: 50px; */
+}
+
+.btn-cta {
+	background-color: #0085ff;
+	color: #fff;
+	padding: 15px 30px;
+	border-radius: 50px;
+}
+
+/* Statistics Section */
+.statistics {
+	margin-top: 40px;
+	text-align: center;
+}
+
+.stats-container {
+	display: flex;
+	justify-content: center;
+	gap: 40px;
+	margin-top: 50px;
+}
+
+.stat-item {
+	background-color: rgba(255, 255, 255, 0.1);
+	padding: 20px 40px;
+	border-radius: 50px;
+	text-align: center;
+	color: #fff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease;
+}
+
+.stat-item h3 {
+	font-size: 32px;
+	color: #fff;
+}
+
+.stat-item p {
+	color: #ccc;
+}
+
+.stat-item:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.as-seen-on {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	align-items: center;
+}
+
+.as-seen-on p {
+	color: #ccc;
+	margin-bottom: 10px;
+}
+
+.as-seen-on ul {
+	display: flex;
+	gap: 20px;
+	list-style: none;
+}
+
+.as-seen-on li {
+	color: #fff;
+	font-size: 14px;
+	opacity: 0.8;
+}
+
+/* Testimonial Section */
+.testimonial {
+	background-color: #0d111e;
+	padding: 100px 0;
+	text-align: center;
+}
+
+.testimonial-content {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.testimonial-content h2 {
+	font-size: 32px;
+	margin-bottom: 20px;
+}
+
+.testimonial-content p {
+	color: #aaa;
+}
+
+.testimonial-image {
+	border-radius: 50%;
+	margin-bottom: 20px;
+}
+
+/* General Section Styling */
+/* General Section Styling */
+section {
+	padding: 70px 0;
+	color: #fff;
+	background-color: #10131c;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+/* Wall Street Traps Section */
+.wall-street-traps .trap-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #131823;
+	border-radius: 20px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+	padding: 30px;
+	margin-bottom: 80px;
+}
+
+.wall-street-traps .image-content {
+	width: 45%;
+}
+
+.wall-street-traps .text-content {
+	width: 50%;
+}
+
+/* Image Styling */
+.image-content img {
+	width: 100%;
+	border-radius: 15px;
+}
+
+/* Text Content */
+.text-content h2 {
+	font-size: 32px;
+	margin-bottom: 20px;
+}
+
+.text-content p {
+	font-size: 18px;
+	margin-bottom: 20px;
+	color: #aaa;
+}
+
+.text-content ul li {
+	font-size: 16px;
+	margin-bottom: 10px;
+	color: #ddd;
+}
+
+.text-content ul li strong {
+	color: #0085ff;
+}
+
+/* Middle Section with a Different Background */
+.alt-background {
+	background-color: #1b1e2b;
+	padding: 90px 0; /* Bigger padding for visual emphasis */
+}
+
+/* Icon Between Coaches */
+.coaching-card .coaching-details {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 30px;
+}
+
+.coaching-card .coaching-session h4 {
+	font-size: 20px;
+}
+
+.coaching-card .icon {
+	font-size: 24px;
+	color: #0085ff;
+	margin: 0 20px;
+}
+
+/* Section Breaking Away from the Card Aesthetic */
+.no-card {
+	background-color: #10131c;
+	padding: 100px 0;
+}
+
+.no-card .strategy-content {
+	text-align: center;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.no-card .strategy-content h2 {
+	font-size: 36px;
+	margin-bottom: 20px;
+}
+
+.no-card .strategy-content p {
+	font-size: 18px;
+	color: #aaa;
+	margin-bottom: 40px;
+}
+
+.no-card .strategy-points {
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 40px;
+}
+
+.no-card .strategy-points li {
+	font-size: 18px;
+	margin-bottom: 10px;
+	color: #ddd;
+}
+
+.no-card .strategy-points li strong {
+	color: #0085ff;
+}
+
+.no-card .strategy-image {
+	margin-top: 50px;
+}
+
+.no-card .strategy-image img {
+	width: 100%;
+	border-radius: 20px;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Hover Effects */
+.trap-card:hover,
+.coaching-card:hover {
+	transform: translateY(-10px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Footer */
+.footer {
+	background-color: #0b0f1a;
+	padding: 20px 0;
+	text-align: center;
+	color: #fff;
+}
