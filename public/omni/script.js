@@ -12,19 +12,26 @@ const firebaseConfig = {
 	measurementId: "G-J71GGK70NY",
 };
 
-const app = firebase.initializeApp(firebaseConfig);
+// Initialize firebase + database
+firebase.initializeApp(firebaseConfig);
 
-console.log("Firebase initialized:", app.name);
+console.log("Firebase initialized");
 
 const db = firebase.database();
 
+// DOM Elements
 const messagesDiv = document.getElementById("messages");
+const cardsContainer = document.getElementById("cards-container");
 const notificationSound = document.getElementById("notification-sound");
 const pauseButton = document.getElementById("pause-sound");
+const newDayButton = document.getElementById("new-day");
 const connectionStatusBadge = document.getElementById("connection-status");
 
 let soundPlaying = false;
+let lastNewDayKey = null;
+let tickers = {};
 
+// Format timestamp as HH:MM DD/MM/YYYY
 function formatTimestamp(timestamp) {
 	const date = new Date(timestamp);
 	const hours = String(date.getHours()).padStart(2, "0");
@@ -36,6 +43,21 @@ function formatTimestamp(timestamp) {
 	return `${hours}:${minutes} ${day}/${month}/${year}`;
 }
 
+// New day button
+newDayButton.addEventListener("click", async () => {
+	const rawTimestamp = Date.now();
+	const rawFormattedTimestamp = formatTimestamp(rawTimestamp);
+
+	await db.ref("messages").push({
+		content: "NEW DAY",
+		timestamp: rawTimestamp,
+		formattedTimestamp: rawFormattedTimestamp,
+	});
+
+	console.log("New day added:", rawTimestamp, rawFormattedTimestamp);
+});
+
+// Pause sound button
 pauseButton.addEventListener("click", () => {
 	if (soundPlaying) {
 		notificationSound.pause();
@@ -60,16 +82,55 @@ db.ref(".info/connected").on("value", (snapshot) => {
 	}
 });
 
-db.ref("messages").on("value", (snapshot) => {
-	console.log("Realtime data:", snapshot.val());
-});
+// db.ref("messages").on("value", (snapshot) => {
+// 	console.log("Realtime data:", snapshot.val());
+// });
 
 // Listen for new messages
 db.ref("messages").on("child_added", (snapshot) => {
-	const message = snapshot.val();
-	displayMessage(message);
+	const messageData = snapshot.val();
+	const key = snapshot.key;
+	const formattedTimestamp = formatTimestamp(messageData.timestamp);
 
-	// Play sound
+	// Add to raw data view
+	displayMessage(messageData);
+
+	// Handle "NEW DAY"
+	if (messageData.content === "NEW DAY") {
+		lastNewDayKey = key;
+		tickers = {};
+		cardsContainer.innerHTML = "";
+		return;
+	}
+
+	// Ignore messages before the most recent "NEW DAY"
+	if (lastNewDayKey && key <= lastNewDayKey) {
+		return;
+	}
+
+	// Parse messsage
+	const [ticker, action, price] = messageData.content.split(" - ");
+
+	if (!ticker || !action || !price) {
+		console.error("Invalid message format:", messageData.content);
+		return;
+	}
+
+	// Create or update a card for the ticker
+	if (!tickers[ticker]) {
+		const card = document.createElement("div");
+		card.className = "card";
+		card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
+		cardsContainer.appendChild(card);
+		tickers[ticker] = card.querySelector("ul");
+	}
+
+	// Add the alert to the ticker's card
+	const alertItem = document.createElement("li");
+	alertItem.textContent = `${action} at ${price} (${formattedTimestamp})`;
+	tickers[ticker].appendChild(alertItem);
+
+	// Play notification sound
 	if (!soundPlaying) {
 		notificationSound.play();
 		soundPlaying = true;
