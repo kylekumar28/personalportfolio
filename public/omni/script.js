@@ -241,9 +241,15 @@ function handleMessageForCards(key, messageData) {
 
 	// Add the alert to the tickers card
 	const alertItem = document.createElement("li");
-	alertItem.textContent = `${action} at ${price} (${formatTimestamp(
-		messageData.timestamp
-	)})`;
+	// alertItem.textContent = `${action} at ${price} (${formatTimestamp(
+	// 	messageData.timestamp
+	// )})`;
+	alertItem.innerHTML = `
+        <span class="action-price">${action}</span> <span>${" @ "}</span> <span class="action-price">${price}</span>
+        <span class="timestamp" style="margin-left: 10px">${formatTimestamp(
+			messageData.timestamp
+		)}</span>
+    `;
 	tickers[ticker].appendChild(alertItem);
 }
 
