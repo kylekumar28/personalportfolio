@@ -45,6 +45,21 @@ button:hover {
 	background: #0056b3;
 }
 
+#alert-button {
+	background-color: grey;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: not-allowed;
+	transition: background-color 0.3s ease;
+}
+
+#alert-button.active {
+	background-color: blue;
+	cursor: pointer;
+}
+
 #cards-container {
 	display: flex;
 	flex-wrap: wrap;
