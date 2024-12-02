@@ -34,6 +34,7 @@ let selectedTickers = new Set([
 	"NQ",
 	"ES",
 	"RTY",
+	"YM",
 	"ZS",
 	"CL",
 	"GC",
