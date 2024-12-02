@@ -39,7 +39,7 @@ let selectedTickers = new Set([
 	"ZW",
 	"BTC",
 ]); // Default: All selected
-
+let allMessages = [];
 let soundPlaying = false;
 let lastNewDayKey = null;
 let tickers = {};
@@ -85,6 +85,24 @@ newDayButton.addEventListener("click", async () => {
 	console.log("New day added:", rawTimestamp, rawFormattedTimestamp);
 });
 
+// Function to process historical data for a specific ticker
+function reloadTickerData(ticker) {
+	// Clear the card for the ticker if it exists
+	if (tickers[ticker]) {
+		tickers[ticker].parentElement.remove();
+		delete tickers[ticker];
+	}
+
+	// Process messages since the last "NEW DAY" for the rechecked ticker
+	allMessages.forEach(({ key, messageData }) => {
+		const [messageTicker] = messageData.content.split(" - ");
+
+		if (messageTicker === ticker) {
+			handleMessageForCards(key, messageData);
+		}
+	});
+}
+
 // Handle checkbox changes
 tickersFilterDiv.addEventListener("change", (event) => {
 	const checkbox = event.target;
@@ -93,6 +111,7 @@ tickersFilterDiv.addEventListener("change", (event) => {
 	if (checkbox.checked) {
 		selectedTickers.add(ticker);
 		console.log("Ticker added to filter:", ticker);
+		reloadTickerData(ticker);
 	} else {
 		selectedTickers.delete(ticker);
 		console.log("Ticker removed from filter:", ticker);
@@ -128,6 +147,9 @@ db.ref("messages")
 
 		if (messages) {
 			Object.entries(messages).forEach(([key, messageData]) => {
+				// Savbe all messages for reprocessing later
+				// allMessages.push({key, messageData});
+
 				// Process existing messages
 				displayMessage(messageData);
 
@@ -136,6 +158,7 @@ db.ref("messages")
 					lastNewDayKey = key;
 					tickers = {};
 					cardsContainer.innerHTML = "";
+					allMessages = [];
 					processingHistory = true;
 					return;
 				}
@@ -143,6 +166,7 @@ db.ref("messages")
 				// Add messages to cards only if they are after the last "NEW DAY"
 				if (processingHistory || !lastNewDayKey) {
 					handleMessageForCards(key, messageData);
+					allMessages.push({ key, messageData });
 				}
 			});
 		}
@@ -164,15 +188,21 @@ db.ref("messages")
 				return;
 			}
 
+			if (lastNewDayKey && key <= lastNewDayKey) {
+				return;
+			}
+
 			// Add to raw data view
 			displayMessage(messageData);
 
-			// Handle message for ticker cards
-			handleMessageForCards(key, messageData);
+			allMessages.push({ key, messageData });
 
 			// Play notification sound for only selected tickers
 			const [ticker] = messageData.content.split(" - ");
 			if (selectedTickers.has(ticker)) {
+				// Handle message for ticker cards
+				handleMessageForCards(key, messageData);
+
 				console.log(`Playing sound for ticker: ${ticker}`);
 
 				if (!isInitialLoad && !soundPlaying) {
@@ -196,6 +226,7 @@ function handleMessageForCards(key, messageData) {
 		lastNewDayKey = key;
 		tickers = {};
 		cardsContainer.innerHTML = "";
+		allMessages = [];
 		return;
 	}
 
