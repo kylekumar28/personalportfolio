@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>OMNI Notifier</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div id="connection-status" class="badge">Disconnected</div>
+		<div class="notifier">
+			<h1>Discord Channel Notifier</h1>
+			<p>Using url: https://omninotifier.netlify.app/webhook/</p>
+			<div id="messages"></div>
+			<button id="pause-sound">Pause Sound</button>
+		</div>
+		<audio id="notification-sound" src="beep (1).wav" loop></audio>
+		<!-- Firebase App SDK -->
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+		<!-- Firebase Database SDK -->
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+		<script src="script.js"></script>
+	</body>
+</html>
