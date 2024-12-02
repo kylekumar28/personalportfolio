@@ -16,6 +16,27 @@ body {
 	margin-bottom: 1rem;
 }
 
+#ticker-filter {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 20px;
+	padding: 10px;
+	background-color: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	justify-content: center;
+}
+
+#ticker-filter label {
+	font-size: 14px;
+	color: #333;
+	cursor: pointer;
+}
+
+#ticker-filter input[type="checkbox"] {
+	margin-right: 5px;
+}
+
 #messages-title {
 	margin-bottom: 1rem;
 }

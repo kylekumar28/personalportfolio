@@ -22,10 +22,23 @@ const db = firebase.database();
 // DOM Elements
 const messagesDiv = document.getElementById("messages");
 const cardsContainer = document.getElementById("cards-container");
+const tickersFilterDiv = document.getElementById("ticker-filter");
+
 const notificationSound = document.getElementById("notification-sound");
 const pauseButton = document.getElementById("alert-button");
 const newDayButton = document.getElementById("new-day");
 const connectionStatusBadge = document.getElementById("connection-status");
+
+let selectedTickers = new Set([
+	"NQ",
+	"ES",
+	"RTY",
+	"ZS",
+	"CL",
+	"GC",
+	"ZW",
+	"BTC",
+]); // Default: All selected
 
 let soundPlaying = false;
 let lastNewDayKey = null;
@@ -70,6 +83,26 @@ newDayButton.addEventListener("click", async () => {
 	});
 
 	console.log("New day added:", rawTimestamp, rawFormattedTimestamp);
+});
+
+// Handle checkbox changes
+tickersFilterDiv.addEventListener("change", (event) => {
+	const checkbox = event.target;
+	const ticker = checkbox.value;
+
+	if (checkbox.checked) {
+		selectedTickers.add(ticker);
+		console.log("Ticker added to filter:", ticker);
+	} else {
+		selectedTickers.delete(ticker);
+		console.log("Ticker removed from filter:", ticker);
+
+		// Remove card for this ticker if it exists
+		if (tickers[ticker]) {
+			tickers[ticker].parentElement.remove();
+			delete tickers[ticker];
+		}
+	}
 });
 
 // Monitor connection status
@@ -137,72 +170,25 @@ db.ref("messages")
 			// Handle message for ticker cards
 			handleMessageForCards(key, messageData);
 
-			// Play notification sound for new messages only
-			if (!isInitialLoad && !soundPlaying) {
-				console.log("notify");
-				notificationSound.play();
-				soundPlaying = true;
+			// Play notification sound for only selected tickers
+			const [ticker] = messageData.content.split(" - ");
+			if (selectedTickers.has(ticker)) {
+				console.log(`Playing sound for ticker: ${ticker}`);
 
-				pauseButton.textContent = "Stop Sound";
-				pauseButton.classList.add("active");
-				pauseButton.disabled = false;
+				if (!isInitialLoad && !soundPlaying) {
+					console.log("notify");
+					notificationSound.play();
+					soundPlaying = true;
+
+					pauseButton.textContent = "Stop Sound";
+					pauseButton.classList.add("active");
+					pauseButton.disabled = false;
+				}
+			} else {
+				console.log(`Ticker ${ticker} is not selected. No sound.`);
 			}
 		});
 	});
-
-// db.ref("messages").on("child_added", (snapshot) => {
-// 	const messageData = snapshot.val();
-// 	const key = snapshot.key;
-// 	const formattedTimestamp = formatTimestamp(messageData.timestamp);
-
-// 	// Add to raw data view
-// 	displayMessage(messageData);
-
-// 	// Handle "NEW DAY"
-// 	if (messageData.content === "NEW DAY") {
-// 		lastNewDayKey = key;
-// 		tickers = {};
-// 		cardsContainer.innerHTML = "";
-// 		return;
-// 	}
-
-// 	// Ignore messages before the most recent "NEW DAY"
-// 	if (lastNewDayKey && key <= lastNewDayKey) {
-// 		return;
-// 	}
-
-// 	// Parse messsage
-// 	const [ticker, action, price] = messageData.content.split(" - ");
-// 	console.log(ticker, action, price);
-
-// 	if (!ticker || !action || !price) {
-// 		console.error("Invalid message format:", messageData.content);
-// 		return;
-// 	}
-
-// 	// Create or update a card for the ticker
-// 	if (!tickers[ticker]) {
-// 		const card = document.createElement("div");
-// 		card.className = "card";
-// 		card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
-// 		cardsContainer.appendChild(card);
-// 		tickers[ticker] = card.querySelector("ul");
-// 	}
-
-// 	// Add the alert to the ticker's card
-// 	const alertItem = document.createElement("li");
-// 	alertItem.textContent = `${action} at ${price} (${formattedTimestamp})`;
-// 	tickers[ticker].appendChild(alertItem);
-
-// 	// Play notification sound
-// 	if (!soundPlaying) {
-// 		notificationSound.play();
-// 		soundPlaying = true;
-
-// 		// Enable pause button
-// 		pauseButton.disabled = false;
-// 	}
-// });
 
 // Handle messages for ticker cards
 function handleMessageForCards(key, messageData) {
@@ -230,6 +216,11 @@ function handleMessageForCards(key, messageData) {
 
 	const [ticker, action, price] = parts;
 
+	if (!selectedTickers.has(ticker)) {
+		console.log(`Ticker ${ticker} not selected. Skipping card creation`);
+		return;
+	}
+
 	// Create or update a card for the ticker
 	if (!tickers[ticker]) {
 		const card = document.createElement("div");
@@ -241,9 +232,6 @@ function handleMessageForCards(key, messageData) {
 
 	// Add the alert to the tickers card
 	const alertItem = document.createElement("li");
-	// alertItem.textContent = `${action} at ${price} (${formatTimestamp(
-	// 	messageData.timestamp
-	// )})`;
 	alertItem.innerHTML = `
         <span class="action-price">${action}</span> <span>${" @ "}</span> <span class="action-price">${price}</span>
         <span class="timestamp" style="margin-left: 10px">${formatTimestamp(
