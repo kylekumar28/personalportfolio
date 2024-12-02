@@ -110,6 +110,7 @@ db.ref("messages").on("child_added", (snapshot) => {
 
 	// Parse messsage
 	const [ticker, action, price] = messageData.content.split(" - ");
+	console.log(ticker, action, price);
 
 	if (!ticker || !action || !price) {
 		console.error("Invalid message format:", messageData.content);
