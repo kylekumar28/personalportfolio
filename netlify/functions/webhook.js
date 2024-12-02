@@ -28,55 +28,53 @@ const admin = require("firebase-admin");
 // 	databaseURL: "https://omnnotifier.firebaseio.com",
 // });
 
-// Use the Firebase Admin SDK
-admin.initializeApp({
-	credential: admin.credential.cert(
-		JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-	),
-	databaseURL:
-		"https://omnnotifier-default-rtdb.europe-west1.firebasedatabase.app/",
-});
-
-console.log(
-	"Firebase initialized with database URL:",
-	admin.database().ref().toString()
-);
+try {
+	console.log("Initializing Firebase");
+	const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+	admin.initializeApp({
+		credential: admin.credential.cert(serviceAccount),
+		databaseURL:
+			"https://omnnotifier-default-rtdb.europe-west1.firebasedatabase.app/",
+	});
+	console.log("Firebase initialized successfully");
+	console.log(
+		"FIrebase initialized with database URL:",
+		admin.database().ref().toString()
+	);
+} catch (error) {
+	console.error("Error initializing Firebase:", error);
+}
 
 const db = admin.database();
 
-// db.ref("messages")
-// 	.push({ content: "Test message", timestamp: Date.now() })
-// 	.then(() => console.log("Message saved successfully"))
-// 	.catch((error) => console.error("Error saving message:", error));
-
 exports.handler = async (event, context) => {
-	console.log("Received event:", event);
+	console.log("Handler invoked with event:", event);
 
 	try {
-		// Parse the incoming payload
-		const body = JSON.parse(event.body);
-		console.log("Parsed body:", body);
+		// Treat incoming body as raw string
+		const rawBody = event.body ? event.body.trim() : "";
+		console.log("Raw body:", rawBody);
 
-		const content = body.content;
-		if (!content) {
+		if (!rawBody) {
 			return {
 				statusCode: 400,
-				body: 'Invalid payload: "content" is missing',
+				body: "Invalid payload: body is empty",
 			};
 		}
 
-		// Log what we will save
+		// Wrap raw string into JSON structure
+		const body = { content: rawBody };
+		console.log("Parsed body:", body);
+
+		const content = body.content;
 		console.log("Content to save:", content);
 
-		// Save the message to Firebase Realtime Database
-		const db = admin.database();
 		await db.ref("messages").push({
 			content: content,
 			timestamp: Date.now(),
 		});
 
-		// Simulate saving to Firebase (replace this with your actual code)
-		console.log("Simulating saving to Firebase...");
+		console.log("Messaged saved successfully");
 
 		return {
 			statusCode: 200,
