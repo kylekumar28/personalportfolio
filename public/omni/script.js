@@ -28,6 +28,7 @@ const notificationSound = document.getElementById("notification-sound");
 const pauseButton = document.getElementById("alert-button");
 const newDayButton = document.getElementById("new-day");
 const connectionStatusBadge = document.getElementById("connection-status");
+const muteSwitch = document.getElementById("mute-switch");
 
 let selectedTickers = new Set([
 	"NQ",
@@ -44,6 +45,7 @@ let soundPlaying = false;
 let lastNewDayKey = null;
 let tickers = {};
 let isInitialLoad = true;
+let isMuted = false;
 
 // Format timestamp as HH:MM DD/MM/YYYY
 function formatTimestamp(timestamp) {
@@ -101,6 +103,39 @@ function reloadTickerData(ticker) {
 			handleMessageForCards(key, messageData);
 		}
 	});
+}
+
+// Handle unmute/mute toggle
+muteSwitch.addEventListener("change", () => {
+	const muteSlider = muteSwitch.nextElementSibling;
+
+	isMuted = muteSwitch.checked; // true for muted, false, for unmuted
+
+	if (isMuted) {
+		muteSwitch.checked = true; // Set toggle to "Muted"
+		muteSlider.style.backgroundColor = "#dc3545"; // Red for muted
+	} else {
+		muteSwitch.checked = false; // Set toggle to "Unmuted"
+		muteSlider.style.backgroundColor = "#28a745"; // Green for unmuted
+	}
+
+	// isMuted = !isMuted; // toggle mute state
+	console.log(isMuted ? "Muted" : "Unmuted");
+});
+
+// Initialize mute toggle UI
+function initializeMuteToggle() {
+	const muteSwitchInput = document.getElementById("mute-switch");
+	const muteSlider = muteSwitchInput.nextElementSibling;
+
+	// Set initial toggle position and color
+	if (isMuted) {
+		muteSwitchInput.checked = true; // Set toggle to "Muted"
+		muteSlider.style.backgroundColor = "#dc3545"; // Red for muted
+	} else {
+		muteSwitchInput.checked = false; // Set toggle to "Unmuted"
+		muteSlider.style.backgroundColor = "#28a745"; // Green for unmuted
+	}
 }
 
 // Handle checkbox changes
@@ -205,7 +240,7 @@ db.ref("messages")
 
 				console.log(`Playing sound for ticker: ${ticker}`);
 
-				if (!isInitialLoad && !soundPlaying) {
+				if (!isInitialLoad && !isMuted && !soundPlaying) {
 					console.log("notify");
 					notificationSound.play();
 					soundPlaying = true;
@@ -292,3 +327,5 @@ function displayMessage(message) {
 		}
 	});
 }
+
+initializeMuteToggle();

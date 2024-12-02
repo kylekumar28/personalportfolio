@@ -8,6 +8,7 @@
 	</head>
 	<body>
 		<div id="connection-status" class="badge">Disconnected</div>
+		<button id="new-day">New Day</button>
 		<!-- <div class="notifier">
 			<h1>Discord Channel Notifier</h1>
 			<p>Using url: https://www.kylekumar.com/webhook/</p>
@@ -48,8 +49,16 @@
 					>
 				</div>
 
+				<div id="mute-toggle">
+					<p>Unmuted</p>
+					<label class="switch">
+						<input type="checkbox" id="mute-switch" />
+						<span class="slider"></span>
+					</label>
+					<p>Muted</p>
+				</div>
+
 				<button id="alert-button" disabled>No New Alerts</button>
-				<button id="new-day">New Day</button>
 			</div>
 
 			<div id="messages"></div>
