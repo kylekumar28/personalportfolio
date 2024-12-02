@@ -269,7 +269,7 @@ function handleMessageForCards(key, messageData) {
 			messageData.timestamp
 		)}</span>
     `;
-	tickers[ticker].appendChild(alertItem);
+	tickers[ticker].prepend(alertItem);
 }
 
 // Display a message
