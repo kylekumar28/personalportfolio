@@ -40,6 +40,7 @@ let selectedTickers = new Set([
 	"GC",
 	"ZW",
 	"BTC",
+	"BP",
 ]); // Default: All selected
 let allMessages = [];
 let soundPlaying = false;
