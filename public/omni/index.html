@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>OMNI Notifier</title>
-		<link rel="stylesheet" href="style.css" />
-	</head>
-	<body>
-		<div id="connection-status" class="badge">Disconnected</div>
-		<button id="new-day">New Day</button>
-		<!-- <div class="notifier">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OMNI Notifier</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="connection-status" class="badge">Disconnected</div>
+    <button id="new-day">New Day</button>
+    <!-- <div class="notifier">
 			<h1>Discord Channel Notifier</h1>
 			<p>Using url: https://www.kylekumar.com/webhook/</p>
 			<p>Format alerts as "TICKER - ACTION - PRICE"</p>
@@ -17,68 +17,88 @@
 			<button id="pause-sound">Pause Sound</button>
 		</div> -->
 
-		<div class="notifier">
-			<div id="messages-title">
-				<!-- <h1>Raw Data</h1> -->
-				<div id="ticker-filter">
-					<label
-						><input type="checkbox" value="NQ" checked /> NQ</label
-					>
-					<label
-						><input type="checkbox" value="ES" checked /> ES</label
-					>
-					<label
-						><input type="checkbox" value="RTY" checked />
-						RTY</label
-					>
-					<label
-						><input type="checkbox" value="YM" checked /> YM</label
-					>
-					<label
-						><input type="checkbox" value="ZS" checked /> ZS</label
-					>
-					<label
-						><input type="checkbox" value="CL" checked /> CL</label
-					>
-					<label
-						><input type="checkbox" value="GC" checked /> GC</label
-					>
-					<label
-						><input type="checkbox" value="ZW" checked /> ZW</label
-					>
-					<label
-						><input type="checkbox" value="BTC" checked />
-						BTC</label
-					>
-					<label
-						><input type="checkbox" value="BP" checked /> BP</label
-					>
-				</div>
+    <div class="notifier">
+      <div id="messages-title">
+        <!-- <h1>Raw Data</h1> -->
+        <div id="ticker-filter">
+          <label><input type="checkbox" value="NQ" checked /> NQ</label>
+          <label><input type="checkbox" value="ES" checked /> ES</label>
+          <label><input type="checkbox" value="RTY" checked /> RTY</label>
+          <label><input type="checkbox" value="YM" checked /> YM</label>
+          <label><input type="checkbox" value="ZS" checked /> ZS</label>
+          <label><input type="checkbox" value="CL" checked /> CL</label>
+          <label><input type="checkbox" value="GC" checked /> GC</label>
+          <label><input type="checkbox" value="ZW" checked /> ZW</label>
+          <label><input type="checkbox" value="BTC" checked /> BTC</label>
+          <label><input type="checkbox" value="BP" checked /> BP</label>
+        </div>
 
-				<div id="mute-toggle">
-					<p>Unmuted</p>
-					<label class="switch">
-						<input type="checkbox" id="mute-switch" />
-						<span class="slider"></span>
-					</label>
-					<p>Muted</p>
-				</div>
+        <div id="mute-toggle">
+          <p>Unmuted</p>
+          <label class="switch">
+            <input type="checkbox" id="mute-switch" />
+            <span class="slider"></span>
+          </label>
+          <p>Muted</p>
+        </div>
 
-				<button id="alert-button" disabled>No New Alerts</button>
-			</div>
+        <div id="view-toggle">
+          <label>
+            <input type="radio" name="view" value="messages" checked />
+            Messages
+          </label>
+          <label>
+            <input type="radio" name="view" value="calculator" />
+            Loss Calculator
+          </label>
+        </div>
 
-			<div id="messages"></div>
-		</div>
+        <button id="alert-button" disabled>No New Alerts</button>
+      </div>
 
-		<div id="cards-container"></div>
+      <!-- Message container -->
+      <div id="messages"></div>
 
-		<audio id="notification-sound" src="beep (1).wav" loop></audio>
+      <div id="calculator" style="display: none">
+        <h2>Contract Loss Calculator</h2>
+        <label for="ticker-select">Select Ticker:</label>
+        <select id="ticker-select"></select>
 
-		<!-- Firebase App SDK -->
-		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-		<!-- Firebase Database SDK -->
-		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-		<!-- Local script -->
-		<script src="script.js"></script>
-	</body>
+        <div id="ticker-info">
+          <p><strong>Tick Value:</strong> <span id="tick-value"></span></p>
+          <p><strong>Tick Size:</strong> <span id="tick-size"></span></p>
+        </div>
+
+        <label for="entry-price">Entry Price:</label>
+        <input type="number" id="entry-price" placeholder="Enter Entry Price" />
+
+        <label for="stop-price">Stop Price:</label>
+        <input type="number" id="stop-price" placeholder="Enter Stop Price" />
+
+        <button id="calculate-loss">Calculate Loss</button>
+
+        <div id="result">
+          <p>
+            <strong>Dollar Loss (1 standard contract):</strong>
+            <span id="dollar-loss-standard"></span>
+          </p>
+          <p>
+            <strong>Dollar Loss (1 micro contract):</strong>
+            <span id="dollar-loss-micro"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="cards-container"></div>
+
+    <audio id="notification-sound" src="beep (1).wav" loop></audio>
+
+    <!-- Firebase App SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <!-- Firebase Database SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Local script -->
+    <script src="script.js"></script>
+  </body>
 </html>

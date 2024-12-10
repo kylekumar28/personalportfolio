@@ -1,231 +1,269 @@
 body {
-	font-family: Arial, sans-serif;
-	text-align: center;
-	margin: 0;
-	padding: 0;
-	background: #f4f4f9;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f9;
 }
 
 .notifier {
-	margin: 50px auto;
-	padding: 20px;
-	max-width: 1400px;
-	background: white;
-	border-radius: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-	margin-bottom: 1rem;
-	position: relative;
+  margin: 50px auto;
+  padding: 20px;
+  max-width: 1400px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+  position: relative;
 }
 
 #ticker-filter {
-	display: flex;
-	gap: 15px;
-	margin-bottom: 20px;
-	padding: 10px;
-	background-color: #f9f9f9;
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	justify-content: center;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  justify-content: center;
 }
 
 #ticker-filter label {
-	font-size: 14px;
-	color: #333;
-	cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
 }
 
-#ticker-filter input[type="checkbox"] {
-	margin-right: 5px;
+#ticker-filter input[type='checkbox'] {
+  margin-right: 5px;
 }
 
 #messages-title {
-	margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 #messages {
-	/* margin: 20px 20px; */
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 10px;
-	border: 1px solid #ddd;
-	height: 300px;
-	max-height: 300px;
-	overflow-y: scroll;
-	background: #fafafa;
+  /* margin: 20px 20px; */
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 10px;
+  border: 1px solid #ddd;
+  height: 300px;
+  max-height: 300px;
+  overflow-y: scroll;
+  background: #fafafa;
 }
 
 button {
-	padding: 10px 20px;
-	background: #007bff;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 button:hover {
-	background: #0056b3;
+  background: #0056b3;
 }
 
 #alert-mute {
-	display: flex;
-	/* justify-content: space-between; */
+  display: flex;
+  /* justify-content: space-between; */
 }
 
 #alert-button {
-	/* flex: 1; */
-	text-align: center;
-	justify-items: center;
-	margin: 0 auto;
-	background-color: grey;
-	color: white;
-	border: none;
-	padding: 10px 20px;
-	border-radius: 5px;
-	font-size: 18px;
-	cursor: not-allowed;
-	transition: background-color 0.3s ease;
+  /* flex: 1; */
+  text-align: center;
+  justify-items: center;
+  margin: 0 auto;
+  background-color: grey;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: not-allowed;
+  transition: background-color 0.3s ease;
 }
 
 #alert-button.active {
-	background-color: blue;
-	cursor: pointer;
+  background-color: blue;
+  cursor: pointer;
 }
 
 #mute-toggle {
-	display: flex;
-	/* justify-content: flex-end; */
-	align-items: center;
-	justify-self: right;
-	position: absolute;
-	right: 20px;
+  display: flex;
+  /* justify-content: flex-end; */
+  align-items: center;
+  justify-self: right;
+  position: absolute;
+  right: 20px;
 }
 
 .switch {
-	position: relative;
-	display: inline-block;
-	width: 50px;
-	height: 24px;
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
 }
 
 .switch input {
-	opacity: 0;
-	width: 0;
-	height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	right: 0;
-	left: 0;
-	bottom: 0;
-	background-color: #dc3545;
-	transition: 0.4s;
-	border-radius: 24px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #dc3545;
+  transition: 0.4s;
+  border-radius: 24px;
 }
 
 .slider::before {
-	position: absolute;
-	content: "";
-	height: 18px;
-	width: 18px;
-	left: 4px;
-	bottom: 3px;
-	background-color: white;
-	transition: 0.4s;
-	border-radius: 50%;
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-	background-color: #28a745; /* Green for unmuted */
+  background-color: #28a745; /* Green for unmuted */
 }
 
 input:checked + .slider:before {
-	transform: translateX(26px); /* Slide the knob */
+  transform: translateX(26px); /* Slide the knob */
 }
 
 #cards-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-	margin-top: 20px;
-	max-width: 1280px;
-	margin: 0 auto;
-	margin-top: 2rem;
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  max-width: 1280px;
+  margin: 0 auto;
+  margin-top: 2rem;
 }
 
 .card {
-	border: 2px solid #ddd;
-	padding: 15px;
-	border-radius: 10px;
-	background-color: #f9f9f9;
-	flex: 1 1 calc(33.333% - 10px);
-	max-width: calc(33.333% - 10px);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 calc(50% - 20px); /* 2 cards per row on smaller screens */
+    max-width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    flex: 1 1 100%; /* 1 card per row on very small screens */
+    max-width: 100%;
+  }
 }
 
 .card h2 {
-	margin: 0 0 10px;
-	font-size: 20px;
-	font-weight: bold;
-	color: #000;
-	text-align: center;
-	border-bottom: 2px solid #007bff;
-	padding-bottom: 5px;
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
 }
 
 .card ul {
-	padding: 0;
-	list-style: none;
-	margin: 0;
+  padding: 0;
+  list-style: none;
+  margin: 0;
 }
 
 .card ul li {
-	margin: 10px 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card ul li .action-price {
-	font-size: 18px; /* Larger font for emphasis */
-	font-weight: bold;
-	color: #007bff; /* Blue for action and price */
+  font-size: 18px; /* Larger font for emphasis */
+  font-weight: bold;
+  color: #007bff; /* Blue for action and price */
 }
 
 /* De-emphasize timestamp */
 .card ul li .timestamp {
-	font-size: 14px; /* Smaller font */
-	color: #666; /* Grey for less emphasis */
+  font-size: 14px; /* Smaller font */
+  color: #666; /* Grey for less emphasis */
 }
 
 .badge {
-	position: fixed;
-	top: 10px;
-	right: 10px;
-	padding: 5px 10px;
-	border-radius: 5px;
-	color: white;
-	font-size: 14px;
-	font-weight: bold;
-	background-color: red; /* Default to Disconnected */
-	z-index: 1000;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: red; /* Default to Disconnected */
+  z-index: 1000;
 }
 
 .badge.connected {
-	background-color: green;
+  background-color: green;
 }
 
 .badge.disconnected {
-	background-color: red;
+  background-color: red;
 }
 
 #new-day {
-	position: fixed;
-	right: 10px;
-	top: 45px;
-	padding: 5px 10px;
-	z-index: 1000;
+  position: fixed;
+  right: 10px;
+  top: 45px;
+  padding: 5px 10px;
+  z-index: 1000;
+}
+
+#view-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#view-toggle label {
+  margin-right: 20px;
+  font-size: 16px;
+}
+/* 
+#calculator,
+#messages {
+  display: none;
+} */
+
+#ticker-select,
+#entry-price,
+#stop-price {
+  /* width: 100%; */
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
