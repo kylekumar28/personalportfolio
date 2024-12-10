@@ -1,90 +1,94 @@
 global.self = global; // Define 'self' for Node.js compatibility
 
-const admin = require("firebase-admin");
+const admin = require('firebase-admin');
+const axios = require('axios');
 
-// const serviceAccount = JSON.par - self(process.env.FIREBASE_SERVICE_ACCOUNT);
+const TELEGRAM_BOT_TOKEN = '7893479762:AAEROtIQGKd1dJpk7MbO0tMWydoBCUxaL70';
+const TELEGRAM_CHAT_ID = '1688623031';
 
-// console.log("hi");
+// Initialise Firebase SDK
+function initializeFirebase() {
+  try {
+    console.log('Initializing Firebase');
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-// const serviceAccount = JSON - self(process.env.FIREBASE_SERVICE_ACCOUNT);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL:
+        'https://omnnotifier-default-rtdb.europe-west1.firebasedatabase.app/',
+    });
 
-// console.log(serviceAccount);
+    console.log('Firebase initialized successfully');
+    console.log(
+      'FIrebase initialized with database URL:',
+      admin.database().ref().toString()
+    );
 
-// Initialize Firebase Admin SDK
-// admin.initializeApp({
-// 	// credential: admin.credential.cert(serviceAccount),
-// 	credential: admin.credential.cert(serviceAccount),
-// 	databaseURL:
-// 		"https://omnnotifier-default-rtdb.europe-west1.firebasedatabase.app/",
-// 	options: {
-// 		databaseAuthVariableOverride: {
-// 			uid: "server-worker",
-// 		},
-// 	},
-// });
-
-// admin.initializeApp({
-// 	credential: admin.credential.applicationDefault(), // Default credentials for testing
-// 	databaseURL: "https://omnnotifier.firebaseio.com",
-// });
-
-try {
-	console.log("Initializing Firebase");
-	const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-	admin.initializeApp({
-		credential: admin.credential.cert(serviceAccount),
-		databaseURL:
-			"https://omnnotifier-default-rtdb.europe-west1.firebasedatabase.app/",
-	});
-	console.log("Firebase initialized successfully");
-	console.log(
-		"FIrebase initialized with database URL:",
-		admin.database().ref().toString()
-	);
-} catch (error) {
-	console.error("Error initializing Firebase:", error);
+    return admin.database();
+  } catch (error) {
+    console.error('Error initializing Firebase:', error);
+  }
 }
 
-const db = admin.database();
+const db = initializeFirebase();
+
+// Function to send Telegram message
+async function sendTelegramMessage(content) {
+  try {
+    const telegramURL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    await axios.post(telegramURL, {
+      chat_id: TELEGRAM_CHAT_ID,
+      text: `🚨 New Alert: ${content}`,
+    });
+
+    console.log('Message sent to Telegram', content);
+  } catch (error) {
+    console.error('Error sending message to Telegram', error);
+  }
+}
 
 exports.handler = async (event, context) => {
-	console.log("Handler invoked with event:", event);
+  console.log('Handler invoked with event:', event);
 
-	try {
-		// Treat incoming body as raw string
-		const rawBody = event.body ? event.body.trim() : "";
-		console.log("Raw body:", rawBody);
+  try {
+    // Treat incoming body as raw string
+    const rawBody = event.body ? event.body.trim() : '';
+    console.log('Raw body:', rawBody);
 
-		if (!rawBody) {
-			return {
-				statusCode: 400,
-				body: "Invalid payload: body is empty",
-			};
-		}
+    if (!rawBody) {
+      console.warn('Received empty payload');
 
-		// Wrap raw string into JSON structure
-		const body = { content: rawBody };
-		console.log("Parsed body:", body);
+      return {
+        statusCode: 400,
+        body: 'Invalid payload: body is empty',
+      };
+    }
 
-		const content = body.content;
-		console.log("Content to save:", content);
+    const content = rawBody;
+    console.log('Parsed content:', content);
 
-		await db.ref("messages").push({
-			content: content,
-			timestamp: Date.now(),
-		});
+    // Save message to Firebase database
+    const messageData = {
+      content,
+      timestamp: Date.now(),
+    };
 
-		console.log("Messaged saved successfully");
+    await db.ref('messages').push(messageData);
+    console.log('Messaged saved successfully');
 
-		return {
-			statusCode: 200,
-			body: "Message received and saved",
-		};
-	} catch (error) {
-		console.error("Error in webhook function:", error);
-		return {
-			statusCode: 500,
-			body: `Internal Server Error: ${error.message}`,
-		};
-	}
+    // Send alert to Telegram
+    await sendTelegramMessage(content);
+
+    return {
+      statusCode: 200,
+      body: 'Message received and saved',
+    };
+  } catch (error) {
+    console.error('Error in webhook function:', error);
+    return {
+      statusCode: 500,
+      body: `Internal Server Error: ${error.message}`,
+    };
+  }
 };
