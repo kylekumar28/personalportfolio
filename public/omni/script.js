@@ -54,6 +54,7 @@ let selectedTickers = new Set([
 	"BTC",
 	"BP",
 	"NG",
+	"LG",
 ]); // Default: All selected
 let allMessages = [];
 let soundPlaying = false;
