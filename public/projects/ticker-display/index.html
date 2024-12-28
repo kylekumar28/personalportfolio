@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raspberry Pi 3 and HUB75 LED Matrix Guide</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+        background-color: #f4f4f9;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #333;
+      }
+      code {
+        background-color: #eee;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-left: 4px solid #ccc;
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .note {
+        background-color: #fff3cd;
+        border-left: 6px solid #ffeeba;
+        padding: 10px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Connecting Raspberry Pi 3 to HUB75 LED Matrix Display</h1>
+    <p>
+      Follow these steps to connect your Raspberry Pi 3 to a HUB75-compatible
+      LED matrix and display scrolling text.
+    </p>
+
+    <h2>What You'll Need</h2>
+    <ul>
+      <li>
+        <strong>Raspberry Pi 3</strong> (or compatible model with GPIO headers).
+      </li>
+      <li><strong>HUB75-compatible RGB LED matrix</strong> (e.g., P10, P4).</li>
+      <li><strong>16-pin ribbon cable</strong> (for HUB75 input).</li>
+      <li>
+        <strong>LED Matrix Driver Board</strong> (e.g., Adafruit RGB Matrix
+        Bonnet).
+      </li>
+      <li>
+        <strong>Power Supply</strong>:
+        <ul>
+          <li>5V, 2A-5A DC power supply for the LED matrix.</li>
+          <li>Separate 5V power source for the Raspberry Pi.</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Jumper Wires</strong> (if connecting directly without a driver
+        board).
+      </li>
+      <li><strong>MicroSD card</strong> with Raspberry Pi OS installed.</li>
+    </ul>
+
+    <h2>Step 1: Prepare Your LED Matrix</h2>
+    <p>
+      Identify the <strong>HUB75 input connector</strong> on the matrix, usually
+      labeled <code>Input</code> or <code>IN</code>. Connect multiple panels in
+      series using the <code>OUT</code> connectors.
+    </p>
+
+    <h2>Step 2: Install Required Software on Raspberry Pi</h2>
+    <pre><code>sudo apt update && sudo apt upgrade -y
+sudo apt install -y git build-essential python3-dev python3-pip
+git clone https://github.com/hzeller/rpi-rgb-led-matrix.git
+cd rpi-rgb-led-matrix
+make
+sudo make install-python</code></pre>
+
+    <h2>Step 3: Connect the Hardware</h2>
+    <h3>Option 1: Using an LED Matrix Driver Board</h3>
+    <ol>
+      <li>Attach the driver board to the Raspberry Pi GPIO header.</li>
+      <li>
+        Connect the 16-pin ribbon cable from the HUB75 connector to the driver
+        board.
+      </li>
+      <li>Attach the power supply to the LED matrix.</li>
+      <li>Power the Raspberry Pi and matrix independently.</li>
+    </ol>
+
+    <h3>Option 2: Direct GPIO Connection</h3>
+    <p>
+      If no driver board is available, connect the GPIO pins directly to the
+      HUB75 pins using this table:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Pin</th>
+          <th>Function</th>
+          <th>Raspberry Pi GPIO Pin</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>R1</td>
+          <td>GPIO 2</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>G1</td>
+          <td>GPIO 3</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>B1</td>
+          <td>GPIO 4</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>GND</td>
+          <td>Ground</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>R2</td>
+          <td>GPIO 17</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>G2</td>
+          <td>GPIO 27</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>B2</td>
+          <td>GPIO 22</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>GND</td>
+          <td>Ground</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>A</td>
+          <td>GPIO 5</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>B</td>
+          <td>GPIO 6</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>C</td>
+          <td>GPIO 13</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>D</td>
+          <td>GPIO 19</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>CLK</td>
+          <td>GPIO 18</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>LAT</td>
+          <td>GPIO 23</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>OE</td>
+          <td>GPIO 24</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>GND</td>
+          <td>Ground</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Step 4: Test the LED Matrix</h2>
+    <pre><code>cd rpi-rgb-led-matrix/examples-api-use
+sudo ./demo -D 0 --led-rows=32 --led-cols=64 --led-chain=1</code></pre>
+
+    <h2>Step 5: Display Scrolling Text</h2>
+    <p>Create a Python script (e.g., <code>scroll_text.py</code>):</p>
+    <pre><code>from rgbmatrix import RGBMatrix, RGBMatrixOptions
+from rgbmatrix import graphics
+import time
+
+options = RGBMatrixOptions()
+options.rows = 32
+options.cols = 64
+options.chain_length = 1
+options.parallel = 1
+options.hardware_mapping = 'regular'
+
+matrix = RGBMatrix(options=options)
+
+def display_text(text):
+    offscreen_canvas = matrix.CreateFrameCanvas()
+    font = graphics.Font()
+    font.LoadFont("../../../fonts/7x13.bdf")
+    textColor = graphics.Color(255, 0, 0)
+    pos = offscreen_canvas.width
+
+    while True:
+        offscreen_canvas.Clear()
+        len = graphics.DrawText(offscreen_canvas, font, pos, 20, textColor, text)
+        pos -= 1
+        if pos + len < 0:
+            pos = offscreen_canvas.width
+        time.sleep(0.05)
+        offscreen_canvas = matrix.SwapOnVSync(offscreen_canvas)
+
+display_text("Hello, World!")</code></pre>
+    <p>Run the script:</p>
+    <pre><code>python3 scroll_text.py</code></pre>
+
+    <h2>Step 6: Add Market Data</h2>
+    <p>
+      Integrate the script with a market data API (e.g., Alpha Vantage, Yahoo
+      Finance) to fetch stock prices dynamically.
+    </p>
+
+    <h2>Power and Cooling Tips</h2>
+    <ul>
+      <li>
+        Use a dedicated power supply for the LED matrix to avoid overloading the
+        Raspberry Pi.
+      </li>
+      <li>Ensure adequate cooling for the Raspberry Pi during extended use.</li>
+    </ul>
+  </body>
+</html>
