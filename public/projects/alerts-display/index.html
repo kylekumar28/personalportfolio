@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raspberry Pi Touchscreen Setup Guide</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+        color: #333;
+      }
+      h1,
+      h2,
+      h3 {
+        color: #0056b3;
+      }
+      code {
+        background-color: #f4f4f4;
+        padding: 4px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      ul {
+        margin: 10px 0;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Raspberry Pi Touchscreen Setup Guide</h1>
+
+    <h2>Components Needed</h2>
+    <ul>
+      <li>
+        <strong>Raspberry Pi</strong> (e.g., Raspberry Pi 4 Model B, with at
+        least 2GB RAM).
+      </li>
+      <li>
+        <strong>Touchscreen Display:</strong>
+        <ul>
+          <li>7-inch Raspberry Pi Official Touchscreen Display</li>
+          <li>Waveshare 7-inch HDMI Touchscreen (or similar)</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Audio Output:</strong> Use the Raspberry Pi’s 3.5mm headphone
+        jack, HDMI audio, or an external speaker.
+      </li>
+      <li>
+        <strong>Handmade Stand:</strong> Custom-made stand for mounting the
+        screen and Raspberry Pi.
+      </li>
+      <li>
+        <strong>Power Supply:</strong> Reliable 5V 3A power supply for each
+        Raspberry Pi and display.
+      </li>
+    </ul>
+
+    <h2>Setup Instructions</h2>
+
+    <h3>1. Install Raspberry Pi OS</h3>
+    <ol>
+      <li>
+        Download and flash Raspberry Pi OS using
+        <a href="https://www.raspberrypi.com/software/" target="_blank"
+          >Raspberry Pi Imager</a
+        >.
+      </li>
+      <li>Connect the Raspberry Pi to the touchscreen via HDMI or GPIO.</li>
+      <li>Boot the Raspberry Pi.</li>
+    </ol>
+
+    <h3>2. Set Up the Website</h3>
+    <ol>
+      <li>
+        Install Chromium:
+        <pre><code>sudo apt update
+sudo apt install chromium-browser -y</code></pre>
+      </li>
+      <li>
+        Enable kiosk mode:
+        <pre><code>nano ~/.config/lxsession/LXDE-pi/autostart</code></pre>
+        Add the following line:
+        <pre><code>@chromium-browser --kiosk http://your-website-url</code></pre>
+        Replace <code>http://your-website-url</code> with your website's URL.
+      </li>
+    </ol>
+
+    <h3>3. Enable Touch Input</h3>
+    <p>
+      Touch functionality should work automatically with most displays. If
+      calibration is needed, use <code>xinput</code> or touchscreen calibration
+      tools.
+    </p>
+
+    <h3>4. Enable Audio</h3>
+    <ol>
+      <li>Test audio output via the Raspberry Pi’s 3.5mm jack or HDMI.</li>
+      <li>
+        Set the default audio output:
+        <pre><code>sudo raspi-config</code></pre>
+        Navigate to <strong>Advanced Options &gt; Audio</strong> and select HDMI
+        or headphone jack.
+      </li>
+    </ol>
+
+    <h3>5. Ensure 24/7 Operation</h3>
+    <ul>
+      <li>Use a reliable power source for continuous operation.</li>
+      <li>Add a simple fan or heatsink for cooling the Raspberry Pi.</li>
+      <li>
+        Set up a daily reboot for maintenance:
+        <pre><code>sudo crontab -e</code></pre>
+        Add this line to reboot at 4 AM:
+        <pre><code>0 4 * * * /sbin/reboot</code></pre>
+      </li>
+    </ul>
+
+    <h3>6. Secure the System</h3>
+    <ul>
+      <li>
+        Set up a firewall using <code>ufw</code> to block unnecessary
+        connections.
+      </li>
+      <li>Ensure the website uses HTTPS for security.</li>
+    </ul>
+
+    <h2>Where to Buy</h2>
+    <ul>
+      <li>
+        <strong>Raspberry Pi:</strong> Official distributors like Adafruit,
+        Pimoroni, or Micro Center.
+      </li>
+      <li>
+        <strong>Touchscreen Displays:</strong> Amazon, Waveshare, or Raspberry
+        Pi Foundation official stores.
+      </li>
+      <li>
+        <strong>Speakers:</strong> Basic USB or 3.5mm-powered speakers from
+        Amazon or electronics stores.
+      </li>
+    </ul>
+
+    <h2>Additional Assistance</h2>
+    <p>
+      If you need help creating the alert website or automating any parts of
+      this setup, feel free to reach out!
+    </p>
+  </body>
+</html>
