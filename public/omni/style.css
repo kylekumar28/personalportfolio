@@ -244,6 +244,15 @@ input:checked + .slider:before {
 	z-index: 1000;
 }
 
+#test {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+	padding: 5px 10px;
+	z-index: 1000;
+	background-color: grey;
+}
+
 #view-toggle {
 	display: flex;
 	justify-content: center;

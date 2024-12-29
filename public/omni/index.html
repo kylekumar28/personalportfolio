@@ -8,6 +8,7 @@
 	</head>
 	<body>
 		<div id="connection-status" class="badge">Disconnected</div>
+		<button id="test">Test</button>
 		<button id="new-day">New Day</button>
 
 		<div class="notifier">
@@ -65,17 +66,22 @@
 
 				<div id="view-toggle">
 					<label>
-						<input
-							type="radio"
-							name="view"
-							value="messages"
-							checked
-						/>
+						<input type="radio" name="view" value="messages" />
 						Messages
 					</label>
 					<label>
 						<input type="radio" name="view" value="calculator" />
 						Loss Calculator
+					</label>
+					<label>
+						<input
+							type="radio"
+							name="view"
+							id="none"
+							value="none"
+							checked
+						/>
+						None
 					</label>
 				</div>
 
@@ -83,7 +89,7 @@
 			</div>
 
 			<!-- Message container -->
-			<div id="messages"></div>
+			<div id="messages" style="display: none"></div>
 
 			<div id="calculator" style="display: none">
 				<h2>Contract Loss Calculator</h2>

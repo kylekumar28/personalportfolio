@@ -28,6 +28,7 @@ const pauseButton = document.getElementById("alert-button");
 const newDayButton = document.getElementById("new-day");
 const connectionStatusBadge = document.getElementById("connection-status");
 const muteSwitch = document.getElementById("mute-switch");
+const testAlertButton = document.getElementById("test");
 
 const TICKERS_DATA = [
 	{ name: "NQ", tickValue: 5, tickSize: 0.25 },
@@ -95,6 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			} else if (radio.value === "calculator" && radio.checked) {
 				messagesContainer.style.display = "none";
 				calculatorContainer.style.display = "block";
+			} else if (radio.value === "none" && radio.checked) {
+				messagesContainer.style.display = "none";
+				calculatorContainer.style.display = "none";
 			}
 		});
 	});
@@ -174,6 +178,18 @@ newDayButton.addEventListener("click", async () => {
 	});
 
 	console.log("New day added:", rawTimestamp, rawFormattedTimestamp);
+});
+
+// Test alert button
+testAlertButton.addEventListener("click", () => {
+	// Trigger the "new alert" sound and trigger "stop alert" button to think an alert has come through - no need to push anything to database
+	soundPlaying = true;
+	notificationSound.play();
+
+	// Simulate enabling the pause button and updating its state
+	pauseButton.textContent = "Stop Alert";
+	pauseButton.classList.add("active");
+	pauseButton.disabled = false;
 });
 
 // Function to process historical data for a specific ticker
