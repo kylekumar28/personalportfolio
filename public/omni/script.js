@@ -177,6 +177,11 @@ newDayButton.addEventListener("click", async () => {
 		formattedTimestamp: rawFormattedTimestamp,
 	});
 
+	await db.ref("status").set({
+		event: "NEW_DAY",
+		timestamp: rawTimestamp,
+	});
+
 	console.log("New day added:", rawTimestamp, rawFormattedTimestamp);
 });
 
@@ -278,6 +283,19 @@ db.ref(".info/connected").on("value", (snapshot) => {
 	}
 });
 
+// Listen for neew day by clients
+db.ref("status").on("value", (snapshot) => {
+	const statusData = snapshot.val();
+
+	if (statusData && statusData.event === "NEW_DAY") {
+		console.log("new day event received, clearing cards");
+
+		tickers = {};
+		cardsContainer.innerHTML = "";
+		allMessages = [];
+	}
+});
+
 // Listen for new messages
 db.ref("messages")
 	.once("value")
@@ -331,6 +349,27 @@ db.ref("messages")
 			if (lastNewDayKey && key <= lastNewDayKey) {
 				return;
 			}
+
+			const latestAlertText =
+				messageData.type === "OMNI"
+					? messageData.content.length > 50
+						? `${messageData.content.substring(0, 50)}...`
+						: messageData.conent
+					: `Ticker: ${
+							messageData.content.split(" - ")[0]
+					  } - ${messageData.content
+							.split(" - ")
+							.slice(1)
+							.join(" ")}`;
+
+			const latestAlertBanner = document.getElementById(
+				"latest-alert-banner"
+			);
+			const latestAlertTextElement =
+				document.getElementById("latest-alert-text");
+
+			latestAlertTextElement.textContent = `Latest Alert: ${latestAlertText}`;
+			latestAlertBanner.classList.remove("hidden");
 
 			// Add to raw data view
 			displayMessage(messageData);
