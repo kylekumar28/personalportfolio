@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		"dollar-loss-standard"
 	);
 	const dollarLossMicroDisplay = document.getElementById("dollar-loss-micro");
+	const tickerChooser = document.getElementById("ticker-chooser");
 
 	// Populate tickers
 	TICKERS_DATA.forEach((ticker) => {
@@ -101,6 +102,15 @@ document.addEventListener("DOMContentLoaded", () => {
 				calculatorContainer.style.display = "none";
 			}
 		});
+	});
+
+	// Ticker chooser
+	tickerChooser.addEventListener("change", (event) => {
+		if (event.currentTarget.checked) {
+			tickersFilterDiv.style.display = "flex";
+		} else if (!event.currentTarget.checked) {
+			tickersFilterDiv.style.display = "none";
+		}
 	});
 
 	// Update tick info when ticker is selected
@@ -138,6 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	tickerSelect.dispatchEvent(new Event("change"));
+});
+
+document.getElementById("dismiss-banner").addEventListener("click", () => {
+	document.getElementById("latest-alert-banner").classList.add("hidden");
 });
 
 // Format timestamp as HH:MM DD/MM/YYYY
