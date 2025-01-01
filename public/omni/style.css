@@ -167,7 +167,7 @@ input:checked + .slider:before {
 
 .card-omni {
 	background-color: #333;
-	color: #000;
+	color: #fff;
 }
 
 @media (max-width: 768px) {
@@ -194,6 +194,10 @@ input:checked + .slider:before {
 	padding-bottom: 5px;
 }
 
+.card-omni h2 {
+	color: #fff;
+}
+
 .card ul {
 	padding: 0;
 	list-style: none;
@@ -205,6 +209,10 @@ input:checked + .slider:before {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.card-omni ul li {
+	text-align: left;
 }
 
 .card ul li .action-price {

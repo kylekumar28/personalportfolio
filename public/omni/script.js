@@ -338,12 +338,11 @@ db.ref("messages")
 			allMessages.push({ key, messageData });
 
 			// Play notification sound for only selected tickers
-			const [ticker] = messageData.content.split(" - ");
-			if (selectedTickers.has(ticker)) {
-				// Handle message for ticker cards
+			if (messageData.type === "OMNI") {
 				handleMessageForCards(key, messageData);
-
-				console.log(`Playing sound for ticker: ${ticker}`);
+				console.log(
+					`Playing sound for OMNI alert: ${messageData.content}`
+				);
 
 				if (!isInitialLoad && !isMuted && !soundPlaying) {
 					console.log("notify");
@@ -355,7 +354,25 @@ db.ref("messages")
 					pauseButton.disabled = false;
 				}
 			} else {
-				console.log(`Ticker ${ticker} is not selected. No sound.`);
+				const [ticker] = messageData.content.split(" - ");
+				if (selectedTickers.has(ticker)) {
+					// Handle message for ticker cards
+					handleMessageForCards(key, messageData);
+
+					console.log(`Playing sound for ticker: ${ticker}`);
+
+					if (!isInitialLoad && !isMuted && !soundPlaying) {
+						console.log("notify");
+						notificationSound.play();
+						soundPlaying = true;
+
+						pauseButton.textContent = "Stop Sound";
+						pauseButton.classList.add("active");
+						pauseButton.disabled = false;
+					}
+				} else {
+					console.log(`Ticker ${ticker} is not selected. No sound.`);
+				}
 			}
 		});
 	});
@@ -377,19 +394,28 @@ function handleMessageForCards(key, messageData) {
 		return;
 	}
 
-	const cardClass = type === "OMNI" ? "card-omni" : "card-default";
+	let ticker;
+	let cardClass;
 
-	// Validate message format
-	const parts = messageData.content.split(" - ");
-	if (parts.length !== 3) {
-		console.warn(
-			"Invalid message format. Skipping card creation:",
-			messageData.content
-		);
-		return;
+	if (type === "OMNI") {
+		ticker = "OMNI";
+		cardClass = "card-omni";
+		selectedTickers.add(ticker);
+	} else {
+		// Validate message format
+		const parts = messageData.content.split(" - ");
+		console.log("parts", parts);
+		if (parts.length === 3) {
+			ticker = parts[0];
+			cardClass = "card-default";
+		} else {
+			console.warn(
+				"Invalid message format for STRING type. Skipping:",
+				content
+			);
+			return;
+		}
 	}
-
-	const [ticker, action, price] = parts;
 
 	if (!selectedTickers.has(ticker)) {
 		console.log(`Ticker ${ticker} not selected. Skipping card creation`);
@@ -407,12 +433,20 @@ function handleMessageForCards(key, messageData) {
 
 	// Add the alert to the tickers card
 	const alertItem = document.createElement("li");
-	alertItem.innerHTML = `
+	if (type === "OMNI") {
+		alertItem.innerHTML = `
+        <p style="margin: 0;">
+             <span class="" style="">${formatTimestamp(timestamp)} - </span>
+        <span class="action-price">${""}</span> <span>${""}</span> <span class="">${content}</span></p>`;
+	} else {
+		const [_, action, price] = content.split(" - ");
+		alertItem.innerHTML = `
         <span class="action-price">${action}</span> <span>${" @ "}</span> <span class="action-price">${price}</span>
         <span class="timestamp" style="margin-left: 10px">${formatTimestamp(
-			messageData.timestamp
+			timestamp
 		)}</span>
     `;
+	}
 	tickers[ticker].prepend(alertItem);
 }
 

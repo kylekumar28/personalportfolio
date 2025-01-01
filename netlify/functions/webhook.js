@@ -33,13 +33,21 @@ function initializeFirebase() {
 const db = initializeFirebase();
 
 // Function to send Telegram message
-async function sendTelegramMessage(content) {
+async function sendTelegramMessage(messageData) {
+	let text = "";
+
+	if (messageData.type === "OMNI") {
+		text = `🚨 OMNI Alert: ${messageData.content}`;
+	} else {
+		text = `🚨 New Alert: ${messageData.content}`;
+	}
+
 	try {
 		const telegramURL = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
 		await axios.post(telegramURL, {
 			chat_id: TELEGRAM_CHAT_ID,
-			text: `🚨 New Alert: ${content}`,
+			text: text,
 		});
 
 		console.log("Message sent to Telegram", content);
@@ -95,7 +103,7 @@ exports.handler = async (event, context) => {
 		console.log("Messaged saved successfully");
 
 		// Send alert to Telegram
-		await sendTelegramMessage(parsedContent);
+		await sendTelegramMessage(messageData);
 
 		return {
 			statusCode: 200,
