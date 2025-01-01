@@ -362,7 +362,9 @@ db.ref("messages")
 
 // Handle messages for ticker cards
 function handleMessageForCards(key, messageData) {
-	if (messageData.content === "NEW DAY") {
+	const { content, type = "STRING", timestamp } = messageData;
+
+	if (content === "NEW DAY") {
 		lastNewDayKey = key;
 		tickers = {};
 		cardsContainer.innerHTML = "";
@@ -374,6 +376,8 @@ function handleMessageForCards(key, messageData) {
 	if (lastNewDayKey && key <= lastNewDayKey) {
 		return;
 	}
+
+	const cardClass = type === "OMNI" ? "card-omni" : "card-default";
 
 	// Validate message format
 	const parts = messageData.content.split(" - ");
@@ -395,7 +399,7 @@ function handleMessageForCards(key, messageData) {
 	// Create or update a card for the ticker
 	if (!tickers[ticker]) {
 		const card = document.createElement("div");
-		card.className = "card";
+		card.className = `card ${cardClass}`;
 		card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
 		cardsContainer.appendChild(card);
 		tickers[ticker] = card.querySelector("ul");

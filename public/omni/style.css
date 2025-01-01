@@ -165,6 +165,11 @@ input:checked + .slider:before {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.card-omni {
+	background-color: #333;
+	color: #000;
+}
+
 @media (max-width: 768px) {
 	.card {
 		flex: 1 1 calc(50% - 20px); /* 2 cards per row on smaller screens */
