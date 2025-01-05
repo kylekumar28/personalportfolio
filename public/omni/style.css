@@ -321,3 +321,9 @@ input:checked + .slider:before {
 #latest-alert-banner.hidden #latest-alert-text {
 	display: none;
 }
+
+.helper span {
+	padding-right: 0.5rem;
+	border-right: 1px solid #888;
+	margin-right: 0.5rem;
+}
