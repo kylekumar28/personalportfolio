@@ -59,6 +59,21 @@ async function sendTelegramMessage(messageData) {
 exports.handler = async (event, context) => {
 	console.log("Handler invoked with event:", event);
 
+	// Add CORS headers
+	const headers = {
+		"Access-Control-Allow-Origin": "*", // Allow all origins (replace '*' with specific origin if needed)
+		"Access-Control-Allow-Methods": "POST, OPTIONS", // Allowed methods
+		"Access-Control-Allow-Headers": "Content-Type", // Allowed headers
+	};
+
+	if (event.httpMethod === "OPTIONS") {
+		return {
+			statusCode: 200,
+			headers,
+			body: "Preflight request handled",
+		};
+	}
+
 	try {
 		// Treat incoming body as raw string
 		const rawBody = event.body ? event.body.trim() : "";
@@ -107,12 +122,14 @@ exports.handler = async (event, context) => {
 
 		return {
 			statusCode: 200,
+			headers,
 			body: "Message received and saved",
 		};
 	} catch (error) {
 		console.error("Error in webhook function:", error);
 		return {
 			statusCode: 500,
+			headers,
 			body: `Internal Server Error: ${error.message}`,
 		};
 	}
