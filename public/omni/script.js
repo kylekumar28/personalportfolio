@@ -14,9 +14,7 @@ const firebaseConfig = {
 
 // Initialize firebase + database
 firebase.initializeApp(firebaseConfig);
-
 console.log('Firebase initialized');
-
 const db = firebase.database();
 
 // DOM Elements
@@ -170,16 +168,7 @@ function formatTimestamp(timestamp) {
 
 // Pause sound button
 pauseButton.addEventListener('click', () => {
-  if (soundPlaying) {
-    notificationSound.pause();
-    notificationSound.currentTime = 0;
-    soundPlaying = false;
-
-    // Disable pause button
-    pauseButton.textContent = 'No New Alerts';
-    pauseButton.classList.remove('active');
-    pauseButton.disabled = true;
-  }
+  stopNotificationSound();
 });
 
 // New day button
@@ -300,15 +289,7 @@ tickersFilterDiv.addEventListener('change', (event) => {
 // Monitor connection status
 db.ref('.info/connected').on('value', (snapshot) => {
   const isConnected = snapshot.val();
-  if (isConnected) {
-    connectionStatusBadge.textContent = 'Connected';
-    connectionStatusBadge.classList.remove('disconnected');
-    connectionStatusBadge.classList.add('connected');
-  } else {
-    connectionStatusBadge.textContent = 'Disconnected';
-    connectionStatusBadge.classList.remove('connected');
-    connectionStatusBadge.classList.add('disconnected');
-  }
+  updateConnectionStatus(isConnected);
 });
 
 // Listen for neew day by clients
@@ -317,204 +298,164 @@ db.ref('status').on('value', (snapshot) => {
 
   if (statusData && statusData.event === 'NEW_DAY') {
     console.log('new day event received, clearing cards');
-
-    tickers = {};
-    cardsContainer.innerHTML = '';
-    allMessages = [];
+    resetForNewDay();
   }
 });
 
-// Listen for new messages
-db.ref('messages')
-  .once('value')
-  .then((snapshot) => {
-    const messages = snapshot.val();
-    let processingHistory = false;
+function initializeMessageListeners() {
+  db.ref('messages')
+    .once('value')
+    .then((snapshot) => {
+      const messages = snapshot.val();
 
-    if (messages) {
-      Object.entries(messages).forEach(([key, messageData]) => {
-        // Savbe all messages for reprocessing later
-        // allMessages.push({key, messageData});
-
-        // Process existing messages
-        displayMessage(messageData);
-
-        // Detect the most recent "NEW DAY marker"
-        if (messageData.content === 'NEW DAY') {
-          lastNewDayKey = key;
-          tickers = {};
-          cardsContainer.innerHTML = '';
-          allMessages = [];
-          processingHistory = true;
-          return;
-        }
-
-        // Add messages to cards only if they are after the last "NEW DAY"
-        if (processingHistory || !lastNewDayKey) {
-          handleMessageForCards(key, messageData);
-          allMessages.push({ key, messageData });
-        }
-      });
-    }
-
-    // Mark initial load as complete
-    console.log('Initial load complete. Listening for new messages...');
-  })
-  .then(() => {
-    // Start listening for new messages after initial load
-    isInitialLoad = false;
-
-    const startListeningFrom = Date.now();
-
-    db.ref('messages').on('child_added', (snapshot) => {
-      const messageData = snapshot.val();
-      const key = snapshot.key;
-
-      if (messageData.timestamp < startListeningFrom) {
-        return;
+      if (messages) {
+        Object.values(messages).forEach(processMessageContent);
       }
 
-      if (lastNewDayKey && key <= lastNewDayKey) {
-        return;
-      }
-
-      // Add to raw data view
-      displayMessage(messageData);
-
-      allMessages.push({ key, messageData });
-
-      // Play notification sound for only selected tickers
-      if (messageData.type === 'OMNI') {
-        handleMessageForCards(key, messageData);
-        console.log(`Playing sound for OMNI alert: ${messageData.content}`);
-
-        if (!isInitialLoad && !isMuted && !soundPlaying) {
-          console.log('notify');
-          notificationSound.play();
-          soundPlaying = true;
-
-          pauseButton.textContent = 'Stop Sound';
-          pauseButton.classList.add('active');
-          pauseButton.disabled = false;
-        }
-      } else {
-        const [ticker] = messageData.content.split(' - ');
-        if (selectedTickers.has(ticker)) {
-          // Handle message for ticker cards
-          handleMessageForCards(key, messageData);
-
-          console.log(`Playing sound for ticker: ${ticker}`);
-
-          if (!isInitialLoad && !isMuted && !soundPlaying) {
-            console.log('notify');
-            notificationSound.play();
-            soundPlaying = true;
-
-            pauseButton.textContent = 'Stop Sound';
-            pauseButton.classList.add('active');
-            pauseButton.disabled = false;
-          }
-        } else {
-          console.log(`Ticker ${ticker} is not selected. No sound.`);
-        }
-      }
-
-      const [ticker] = messageData.content.split(' - ');
-      if (selectedTickers.has(ticker)) {
-        // Add latest alert text
-        const latestAlertText =
-          messageData.type === 'OMNI'
-            ? messageData.content.length > 50
-              ? `${messageData.content.substring(0, 50)}...`
-              : messageData.conent
-            : `Ticker: ${
-                messageData.content.split(' - ')[0]
-              } - ${messageData.content.split(' - ').slice(1).join(' ')}`;
-
-        const latestAlertBanner = document.getElementById(
-          'latest-alert-banner'
-        );
-        const latestAlertTextElement =
-          document.getElementById('latest-alert-text');
-
-        latestAlertTextElement.textContent = `Latest Alert: ${latestAlertText}`;
-        latestAlertBanner.classList.remove('hidden');
-      }
+      isInitialLoad = false;
     });
+
+  db.ref('messages').on('child_added', (snapshot) => {
+    const messageData = snapshot.val();
+
+    if (messageData.timestamp < startListeningFrom) return;
+    if (lastNewDayKey && key <= lastNewDayKey) return;
+
+    processMessageContent(messageData);
   });
+}
+
+// Listen for new messages
+// db.ref('messages')
+//   .once('value')
+//   .then((snapshot) => {
+//     const messages = snapshot.val();
+//     let processingHistory = false;
+
+//     if (messages) {
+//       Object.entries(messages).forEach(([key, messageData]) => {
+//         // Process existing messages
+//         displayMessage(messageData);
+
+//         // Detect the most recent "NEW DAY marker"
+//         if (messageData.content === 'NEW DAY') {
+//           lastNewDayKey = key;
+//           processingHistory = true;
+//           resetForNewDay();
+//           return;
+//         }
+
+//         // Add messages to cards only if they are after the last "NEW DAY"
+//         if (processingHistory || !lastNewDayKey) {
+//           handleMessageForCards(key, messageData);
+//           allMessages.push({ key, messageData });
+//         }
+//       });
+//     }
+
+//     // Mark initial load as complete
+//     console.log('Initial load complete. Listening for new messages...');
+//   })
+//   .then(() => {
+//     // Start listening for new messages after initial load
+//     isInitialLoad = false;
+
+//     const startListeningFrom = Date.now();
+
+//     db.ref('messages').on('child_added', (snapshot) => {
+//       const messageData = snapshot.val();
+//       const key = snapshot.key;
+
+//       if (messageData.timestamp < startListeningFrom) return;
+//       if (lastNewDayKey && key <= lastNewDayKey) return;
+
+//       // Add to raw data view
+//       displayMessage(messageData);
+//       allMessages.push({ key, messageData });
+
+//       const isOmni = messageData.type === 'OMNI';
+//       const ticker = isOmni ? 'OMNI' : messageData.content.split(' - ')[0];
+
+//       if (isOmni || selectedTickers.has(ticker)) {
+//         handleMessageForCards(messageData);
+//         updateLatestAlertBanner(messageData);
+//         playNotificationSound();
+//       } else {
+//         console.log(`Ticker ${ticker} is not selected. No sound playing`);
+//       }
+//     });
+//   });
 
 // Handle messages for ticker cards
-function handleMessageForCards(key, messageData) {
-  const { content, type = 'STRING', timestamp } = messageData;
+// function handleMessageForCards(key, messageData) {
+//   const { content, type = 'STRING', timestamp } = messageData;
 
-  if (content === 'NEW DAY') {
-    lastNewDayKey = key;
-    tickers = {};
-    cardsContainer.innerHTML = '';
-    allMessages = [];
-    return;
-  }
+//   if (content === 'NEW DAY') {
+//     lastNewDayKey = key;
+//     resetForNewDay();
+//     return;
+//   }
 
-  // Ignore messages before the most recent "NEW DAY"
-  if (lastNewDayKey && key <= lastNewDayKey) {
-    return;
-  }
+//   // Ignore messages before the most recent "NEW DAY"
+//   if (lastNewDayKey && key <= lastNewDayKey) {
+//     return;
+//   }
 
-  let ticker;
-  let cardClass;
+//   let ticker;
+//   let cardClass;
 
-  if (type === 'OMNI') {
-    ticker = 'OMNI';
-    cardClass = 'card-omni';
-    selectedTickers.add(ticker);
-  } else {
-    // Validate message format
-    const parts = messageData.content.split(' - ');
-    console.log('parts', parts);
-    if (parts.length === 3) {
-      ticker = parts[0];
-      cardClass = 'card-default';
-    } else {
-      console.warn(
-        'Invalid message format for STRING type. Skipping:',
-        content
-      );
-      return;
-    }
-  }
+//   if (type === 'OMNI') {
+//     ticker = 'OMNI';
+//     cardClass = 'card-omni';
+//     selectedTickers.add(ticker);
+//   } else {
+//     // Validate message format
+//     const parts = messageData.content.split(' - ');
+//     console.log('parts', parts);
+//     if (parts.length === 3) {
+//       ticker = parts[0];
+//       cardClass = 'card-default';
+//     } else {
+//       console.warn(
+//         'Invalid message format for STRING type. Skipping:',
+//         content
+//       );
+//       return;
+//     }
+//   }
 
-  if (!selectedTickers.has(ticker)) {
-    console.log(`Ticker ${ticker} not selected. Skipping card creation`);
-    return;
-  }
+//   if (!selectedTickers.has(ticker)) {
+//     console.log(`Ticker ${ticker} not selected. Skipping card creation`);
+//     return;
+//   }
 
-  // Create or update a card for the ticker
-  if (!tickers[ticker]) {
-    const card = document.createElement('div');
-    card.className = `card ${cardClass}`;
-    card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
-    cardsContainer.appendChild(card);
-    tickers[ticker] = card.querySelector('ul');
-  }
+//   // Create or update a card for the ticker
+//   if (!tickers[ticker]) {
+//     const card = document.createElement('div');
+//     card.className = `card ${cardClass}`;
+//     card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
+//     cardsContainer.appendChild(card);
+//     tickers[ticker] = card.querySelector('ul');
+//   }
 
-  // Add the alert to the tickers card
-  const alertItem = document.createElement('li');
-  if (type === 'OMNI') {
-    alertItem.innerHTML = `
-        <p style="margin: 0;">
-             <span class="" style="">${formatTimestamp(timestamp)} - </span>
-        <span class="action-price">${''}</span> <span>${''}</span> <span class="">${content}</span></p>`;
-  } else {
-    const [_, action, price] = content.split(' - ');
-    alertItem.innerHTML = `
-        <span class="action-price">${action}</span> <span>${' @ '}</span> <span class="action-price">${price}</span>
-        <span class="timestamp" style="margin-left: 10px">${formatTimestamp(
-          timestamp
-        )}</span>
-    `;
-  }
-  tickers[ticker].prepend(alertItem);
-}
+//   // Add the alert to the tickers card
+//   const alertItem = document.createElement('li');
+//   if (type === 'OMNI') {
+//     alertItem.innerHTML = `
+//         <p style="margin: 0;">
+//              <span class="" style="">${formatTimestamp(timestamp)} - </span>
+//         <span class="action-price">${''}</span> <span>${''}</span> <span class="">${content}</span></p>`;
+//   } else {
+//     const [_, action, price] = content.split(' - ');
+//     alertItem.innerHTML = `
+//         <span class="action-price">${action}</span> <span>${' @ '}</span> <span class="action-price">${price}</span>
+//         <span class="timestamp" style="margin-left: 10px">${formatTimestamp(
+//           timestamp
+//         )}</span>
+//     `;
+//   }
+//   tickers[ticker].prepend(alertItem);
+// }
 
 // Display a message
 function displayMessage(message) {
@@ -535,6 +476,72 @@ function displayMessage(message) {
       msg.style.fontWeight = 'normal';
     }
   });
+}
+
+// Play notification sound
+function playNotificationSound() {
+  if (!isInitialLoad && !isMuted && !soundPlaying) {
+    console.log('Playing sound');
+    notificationSound.play();
+    soundPlaying = true;
+
+    pauseButton.textContent = 'Stop Sound';
+    pauseButton.classList.add('active');
+    pauseButton.disabled = false;
+  }
+}
+
+function stopNotificationSound() {
+  if (soundPlaying) {
+    console.log('Sound stopped');
+    notificationSound.pause();
+    notificationSound.currentTime = 0;
+    soundPlaying = false;
+
+    pauseButton.textContent = 'No New Alerts';
+    pauseButton.classList.remove('active');
+    pauseButton.disabled = true;
+  }
+}
+
+// Update connection badge
+function updateConnectionStatus(isConnected) {
+  if (isConnected) {
+    connectionStatusBadge.textContent = 'Connected';
+    connectionStatusBadge.classList.remove('disconnected');
+    connectionStatusBadge.classList.add('connected');
+  } else {
+    connectionStatusBadge.textContent = 'Disconnected';
+    connectionStatusBadge.classList.remove('connected');
+    connectionStatusBadge.classList.add('disconnected');
+  }
+}
+
+// Update latest alert banner
+function updateLatestAlertBanner(messageData) {
+  const [ticker] = messageData.content.split(' - ');
+  if (selectedTickers.has(ticker)) {
+    const latestAlertText =
+      messageData.type === 'OMNI'
+        ? messageData.content.length > 50
+          ? `${messageData.content.substring(0, 50)}...`
+          : messageData.content
+        : `Ticker: ${
+            messageData.content.split(' - ')[0]
+          } - ${messageData.content.split(' - ').slice(1).join(' ')}`;
+
+    const latestAlertBanner = document.getElementById('latest-alert-banner');
+    const latestAlertTextElement = document.getElementById('latest-alert-text');
+
+    latestAlertTextElement.textContent = `Latest Alert: ${latestAlertText}`;
+    latestAlertBanner.classList.remove('hidden');
+  }
+}
+
+function resetForNewDay() {
+  tickers = {};
+  cardsContainer.innerHTML = '';
+  allMessages = [];
 }
 
 initializeMuteToggle();
