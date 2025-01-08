@@ -14,9 +14,7 @@ const firebaseConfig = {
 
 // Initialize firebase + database
 firebase.initializeApp(firebaseConfig);
-
 console.log("Firebase initialized");
-
 const db = firebase.database();
 
 // DOM Elements
@@ -29,6 +27,7 @@ const newDayButton = document.getElementById("new-day");
 const connectionStatusBadge = document.getElementById("connection-status");
 const muteSwitch = document.getElementById("mute-switch");
 const testAlertButton = document.getElementById("test");
+const refreshAllClients = document.getElementById("refresh-all-clients");
 
 const TICKERS_DATA = [
 	{ name: "NQ", tickValue: 5, tickSize: 0.25 },
@@ -65,6 +64,7 @@ let lastNewDayKey = null;
 let tickers = {};
 let isInitialLoad = true;
 let isMuted = false;
+let lastSeenTimestamp = null;
 
 document.addEventListener("DOMContentLoaded", () => {
 	const viewToggle = document.getElementsByName("view");
@@ -285,6 +285,13 @@ tickersFilterDiv.addEventListener("change", (event) => {
 	}
 });
 
+// Refresh button on click
+refreshAllClients.addEventListener("click", () => {
+	const timestamp = Date.now(); // Current timestamp
+	db.ref("commands/refresh").set({ timestamp });
+	console.log("Refresh sent to all clients");
+});
+
 // Monitor connection status
 db.ref(".info/connected").on("value", (snapshot) => {
 	const isConnected = snapshot.val();
@@ -312,6 +319,23 @@ db.ref("status").on("value", (snapshot) => {
 	}
 });
 
+// Listen for refresh commands
+db.ref("commands/refresh").on("value", (snapshot) => {
+	const refreshData = snapshot.val();
+	const now = Date.now();
+
+	if (
+		refreshData &&
+		refreshData.timestamp &&
+		Math.abs(now - refreshData.timestamp) <= 100
+	) {
+		console.log("Refresh signal detected. Reloading...");
+		window.location.reload();
+	} else {
+		console.log("Refresh signal out of time");
+	}
+});
+
 // Listen for new messages
 db.ref("messages")
 	.once("value")
@@ -321,14 +345,14 @@ db.ref("messages")
 
 		if (messages) {
 			Object.entries(messages).forEach(([key, messageData]) => {
-				// Savbe all messages for reprocessing later
-				// allMessages.push({key, messageData});
-
 				// Process existing messages
 				displayMessage(messageData);
 
 				// Detect the most recent "NEW DAY marker"
 				if (messageData.content === "NEW DAY") {
+					console.log(
+						"New day detected. Starting message processing."
+					);
 					lastNewDayKey = key;
 					tickers = {};
 					cardsContainer.innerHTML = "";
@@ -337,11 +361,14 @@ db.ref("messages")
 					return;
 				}
 
-				// Add messages to cards only if they are after the last "NEW DAY"
-				if (processingHistory || !lastNewDayKey) {
-					handleMessageForCards(key, messageData);
-					allMessages.push({ key, messageData });
+				if (!processingHistory) {
+					console.log("Skipping old messages");
+					return;
 				}
+
+				// Add messages to cards only if they are after the last "NEW DAY"
+				handleMessageForCards(key, messageData);
+				allMessages.push({ key, messageData });
 			});
 		}
 
@@ -450,8 +477,11 @@ function handleMessageForCards(key, messageData) {
 
 	// Ignore messages before the most recent "NEW DAY"
 	if (lastNewDayKey && key <= lastNewDayKey) {
+		console.log("Skipping message before NEW DAy:", content);
 		return;
 	}
+
+	console.log(`Processing message: ${messageData.content}, Key: ${key}`);
 
 	let ticker;
 	let cardClass;
