@@ -366,6 +366,10 @@ db.ref("messages")
 				return;
 			}
 
+			if (latestAlertText === "NEW DAY") {
+				return;
+			}
+
 			const latestAlertText =
 				messageData.type === "OMNI"
 					? messageData.content.length > 50
