@@ -349,17 +349,17 @@ db.ref("messages")
 				displayMessage(messageData);
 
 				// Detect the most recent "NEW DAY marker"
-				if (messageData.content === "NEW DAY") {
-					console.log(
-						"New day detected. Starting message processing."
-					);
-					lastNewDayKey = key;
-					tickers = {};
-					cardsContainer.innerHTML = "";
-					allMessages = [];
-					processingHistory = true;
-					return;
-				}
+				// if (messageData.content === "NEW DAY") {
+				// 	console.log(
+				// 		"New day detected. Starting message processing."
+				// 	);
+				// 	lastNewDayKey = key;
+				// 	tickers = {};
+				// 	cardsContainer.innerHTML = "";
+				// 	allMessages = [];
+				// 	processingHistory = true;
+				// 	return;
+				// }
 
 				if (!processingHistory) {
 					console.log("Skipping old messages");
