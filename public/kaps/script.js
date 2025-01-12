@@ -456,7 +456,7 @@ db.ref('messages')
 
 // Handle messages for ticker cards
 function handleMessageForCards(key, messageData) {
-  const { content, type = 'STRING', timestamp } = messageData;
+  let { content, type = 'STRING', timestamp } = messageData;
 
   if (content === 'NEW DAY') {
     lastNewDayKey = key;
@@ -478,8 +478,15 @@ function handleMessageForCards(key, messageData) {
   let cardClass;
 
   if (type === 'OMNI') {
-    ticker = 'OMNI';
-    cardClass = 'card-omni';
+    content = content
+      .replaceAll('OMNIACS', 'TRADERS')
+      .replaceAll('OMNI', 'KAPS')
+      .replaceAll('OSCARISM', 'KUMARISM');
+  }
+
+  if (type === 'OMNI') {
+    ticker = 'KAPS';
+    cardClass = 'card-kaps';
     selectedTickers.add(ticker);
   } else {
     // Validate message format
