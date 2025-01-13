@@ -5,6 +5,7 @@ const axios = require('axios');
 
 const TELEGRAM_BOT_TOKEN = '7893479762:AAEROtIQGKd1dJpk7MbO0tMWydoBCUxaL70';
 const TELEGRAM_CHAT_ID = '1688623031';
+const TELEGRAM_GROUP_ID = '-4712121548';
 
 // Initialise Firebase SDK
 function initializeFirebase() {
@@ -47,6 +48,11 @@ async function sendTelegramMessage(messageData) {
 
     await axios.post(telegramURL, {
       chat_id: TELEGRAM_CHAT_ID,
+      text: text,
+    });
+
+    await axios.post(telegramURL, {
+      chat_id: TELEGRAM_GROUP_ID,
       text: text,
     });
 
