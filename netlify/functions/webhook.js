@@ -56,7 +56,7 @@ async function sendTelegramMessage(messageData) {
       text: text,
     });
 
-    console.log('Message sent to Telegram', content);
+    console.log('Message sent to Telegram', messageData.content);
   } catch (error) {
     console.error('Error sending message to Telegram', error);
   }
