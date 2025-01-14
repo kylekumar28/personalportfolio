@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KAPS</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -11,6 +15,17 @@
     <button id="test">Test</button>
     <button id="new-day">New Day</button>
     <button id="refresh-all-clients">Refresh</button>
+
+    <div id="dark-mode-toggle">
+      <div>
+        <input type="checkbox" class="checkbox" id="checkbox" />
+        <label for="checkbox" class="checkbox-label">
+          <i class="fas fa-moon"></i>
+          <i class="fas fa-sun"></i>
+          <span class="ball"></span>
+        </label>
+      </div>
+    </div>
 
     <div id="latest-alert-banner" class="hidden">
       <button
@@ -149,7 +164,7 @@
         width: 100%;
       "
     >
-      <p style="font-size: 5rem; color: #ccc; font-weight: bold">
+      <p style="font-size: 5rem; color: #ddd; font-weight: bold">
         KAPS - Kumar Analytics & Profit System
       </p>
     </div>

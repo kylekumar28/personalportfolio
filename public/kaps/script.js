@@ -28,6 +28,7 @@ const connectionStatusBadge = document.getElementById('connection-status');
 const muteSwitch = document.getElementById('mute-switch');
 const testAlertButton = document.getElementById('test');
 const refreshAllClients = document.getElementById('refresh-all-clients');
+const darkModeToggle = document.getElementById('dark-mode-toggle');
 
 const TICKERS_DATA = [
   { name: 'NQ', tickValue: 5, tickSize: 0.25 },
@@ -247,6 +248,17 @@ muteSwitch.addEventListener('change', () => {
 
   // isMuted = !isMuted; // toggle mute state
   console.log(isMuted ? 'Muted' : 'Unmuted');
+});
+
+// Dark mode toggle
+darkModeToggle.addEventListener('change', (e) => {
+  if (e.target.checked === true) {
+    console.log('checked');
+    document.body.classList.add('dark-mode');
+  } else {
+    console.log('unchecked');
+    document.body.classList.remove('dark-mode');
+  }
 });
 
 // Initialize mute toggle UI

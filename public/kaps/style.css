@@ -210,6 +210,7 @@ input:checked + .slider:before {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #000;
 }
 
 .card-omni ul li {
@@ -333,4 +334,107 @@ input:checked + .slider:before {
   padding-right: 0.5rem;
   border-right: 1px solid #888;
   margin-right: 0.5rem;
+}
+
+/* Dark mode toggle */
+
+#dark-mode-toggle {
+  position: absolute;
+  top: 45px;
+  left: 5px;
+}
+
+#dark-mode-toggle .checkbox {
+  opacity: 0;
+  position: absolute;
+}
+
+#dark-mode-toggle .checkbox-label {
+  background-color: #111;
+  width: 40px;
+  height: 20px;
+  border-radius: 50px;
+  position: relative;
+  padding: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#dark-mode-toggle .fa-moon {
+  color: #f1c40f;
+}
+
+#dark-mode-toggle .fa-sun {
+  color: #f39c12;
+}
+
+#dark-mode-toggle .checkbox-label .ball {
+  background-color: #fff;
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 2px;
+  top: 4x;
+  border-radius: 50%;
+  transition: transform 0.2s linear;
+}
+
+#dark-mode-toggle .checkbox:checked + .checkbox-label .ball {
+  transform: translateX(30px);
+}
+
+/* Dark mode modifiers */
+body.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+body.dark-mode .background > p {
+  color: #444 !important;
+}
+
+body.dark-mode .notifier {
+  background: #222;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode #cards-container > .card {
+  border: none;
+  background-color: #444;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .card-kaps {
+  background-color: #222 !important;
+  color: #fff;
+}
+
+body.dark-mode .card h2 {
+  /* margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: bold; */
+  color: #fff;
+  /* text-align: center; */
+  border-bottom: 2px solid #007bff;
+  /* padding-bottom: 5px; */
+}
+
+body.dark-mode .card-kaps h2 {
+  color: #ffffff;
+}
+
+body.dark-mode .card ul li {
+  color: #fff;
+}
+
+body.dark-mode .card ul li .action-price {
+  font-weight: bold;
+}
+
+body.dark-mode .card ul li .timestamp {
+  color: #aaa; /* Grey for less emphasis */
 }
