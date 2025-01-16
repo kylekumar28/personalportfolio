@@ -195,7 +195,7 @@ input:checked + .slider:before {
   padding-bottom: 5px;
 }
 
-.card-omni h2 {
+.card-kaps h2 {
   color: #fff;
 }
 
@@ -213,8 +213,9 @@ input:checked + .slider:before {
   color: #000;
 }
 
-.card-omni ul li {
+.card-kaps ul li {
   text-align: left;
+  color: #ddd;
 }
 
 .card ul li .action-price {
