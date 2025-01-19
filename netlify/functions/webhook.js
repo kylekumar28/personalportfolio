@@ -155,14 +155,14 @@ exports.handler = async (event, context) => {
           'OMNI message without link detected. Sending to Telegram and Firebase.'
         );
         await sendTelegramMessage(messageData);
-        await saveToFirebase(messageData);
+        await db.ref('messages').push(messageData);
       }
     } else {
       console.log(
         'Non-OMNI message detected. Sending to Telegram and Firebase.'
       );
       await sendTelegramMessage(messageData);
-      await saveToFirebase(messageData);
+      await db.ref('messages').push(messageData);
     }
 
     return {
