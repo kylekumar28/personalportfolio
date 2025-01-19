@@ -120,11 +120,50 @@ exports.handler = async (event, context) => {
       timestamp: Date.now(),
     };
 
-    await db.ref('messages').push(messageData);
-    console.log('Messaged saved successfully');
+    // if (parsedContent.type === 'OMNI') {
+    //   if (parsedContent.hasLink) {
+    //     await sendTelegramMessage(messageData);
+    //   } else {
+    //     await db.ref('messages').push(messageData);
+    //     await sendTelegramMessage(messageData);
+    //   }
+    // } else {
+    //   await db.ref('messages').push(messageData);
+    //   await sendTelegramMessage(messageData);
+    // }
+
+    // await deb.ref('messages').push(messageData);
+
+    // if (!parsedContent.hasLink) {
+    //   await db.ref('messages').push(messageData);
+    // }
+
+    // await db.ref('messages').push(messageData);
+    // console.log('Messaged saved successfully');
 
     // Send alert to Telegram
-    await sendTelegramMessage(messageData);
+    // await sendTelegramMessage(messageData);
+
+    if (messageData.type === 'OMNI') {
+      if (messageData.hasLink) {
+        console.log(
+          'OMNI message with link detected. Sending to Telegram only.'
+        );
+        await sendTelegramMessage(messageData);
+      } else {
+        console.log(
+          'OMNI message without link detected. Sending to Telegram and Firebase.'
+        );
+        await sendTelegramMessage(messageData);
+        await saveToFirebase(messageData);
+      }
+    } else {
+      console.log(
+        'Non-OMNI message detected. Sending to Telegram and Firebase.'
+      );
+      await sendTelegramMessage(messageData);
+      await saveToFirebase(messageData);
+    }
 
     return {
       statusCode: 200,
