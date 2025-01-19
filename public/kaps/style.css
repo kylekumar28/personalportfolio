@@ -211,7 +211,38 @@ input:checked + .slider:before {
   justify-content: center;
   align-items: center;
   color: #000;
+  position: relative;
 }
+
+.card ul li.latest-alert {
+  /* border-right: 10px solid #00ff11; */
+  background-color: #888;
+}
+
+/* .card ul li.latest-alert::after {
+  content: 'latest';
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  left: 310px;
+
+  position: absolute;
+  z-index: 1;
+}
+
+.card ul li.latest-alert::before {
+  content: ' ';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+} */
 
 .card-kaps ul li {
   text-align: left;
@@ -338,7 +369,6 @@ input:checked + .slider:before {
 }
 
 /* Dark mode toggle */
-
 #dark-mode-toggle {
   position: absolute;
   top: 45px;
@@ -420,8 +450,14 @@ body.dark-mode .card h2 {
   font-weight: bold; */
   color: #fff;
   /* text-align: center; */
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid #52c8fe;
   /* padding-bottom: 5px; */
+}
+
+body.dark-mode .card ul .action-price {
+  font-size: 18px; /* Larger font for emphasis */
+  font-weight: bold;
+  color: #52c8fe; /* Blue for action and price */
 }
 
 body.dark-mode .card-kaps h2 {

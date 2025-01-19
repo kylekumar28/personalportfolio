@@ -466,6 +466,8 @@ db.ref('messages')
     });
   });
 
+let latestAlertItem;
+
 // Handle messages for ticker cards
 function handleMessageForCards(key, messageData) {
   let { content, type = 'STRING', timestamp } = messageData;
@@ -546,6 +548,21 @@ function handleMessageForCards(key, messageData) {
         )}</span>
     `;
   }
+
+  // Highlight latest alert
+  // const previousLatestAlert = tickers[ticker].querySelector('.latest-alert');
+  // if (previousLatestAlert) {
+  //   previousLatestAlert.classList.remove('latest-alert'); // Remove highlight from the previous alert
+  // }
+  // alertItem.classList.add('latest-alert'); // Add highlight to the new alert
+  if (latestAlertItem) {
+    latestAlertItem.classList.remove('latest-alert');
+    alertItem.classList.add('latest-alert');
+  } else {
+    alertItem.classList.add('latest-alert');
+  }
+
+  latestAlertItem = alertItem;
   tickers[ticker].prepend(alertItem);
 }
 
