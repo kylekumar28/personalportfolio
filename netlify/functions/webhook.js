@@ -83,61 +83,63 @@ exports.handler = async (event, context) => {
   try {
     // Treat incoming body as raw string
     const rawBody = event.body ? event.body.trim() : '';
-    console.log('Raw body:', rawBody);
+    console.log('Raw body received:', rawBody);
 
     if (!rawBody) {
       console.warn('Received empty payload');
 
       return {
         statusCode: 400,
+        headers,
         body: 'Invalid payload: body is empty',
       };
     }
 
-    let parsedContent;
-    let messageType = 'STRING';
-    let hasLink = parsedContent.hasLink;
+    let parsedBody;
 
     try {
-      parsedContent = JSON.parse(rawBody);
-
-      // If payload is type of OMNI
-      if (parsedContent.type === 'OMNI' && parsedContent.text) {
-        messageType = 'OMNI';
-        parsedContent = parsedContent.text;
-      } else {
-        throw new Error('Invalid OMNI payload structure');
-      }
-    } catch {
-      parsedContent = rawBody;
+      parsedBody = JSON.parse(rawBody);
+    } catch (error) {
+      console.error('Error parsing JSON payload:', error);
+      return {
+        statusCode: 400,
+        headers,
+        body: 'Invalid JSON payload',
+      };
     }
 
-    console.log(`Parsed content: ${parsedContent} (Type: ${messageType})`);
+    const { text, type, hasLink } = parsedBody;
 
-    // Save message to Firebase database
+    if (!text || !type) {
+      console.warn('Invalid payload structure. Missing "text" or "type.');
+
+      return {
+        statusCode: 400,
+        headers,
+        body: 'Invalid payload structure: Missing required fields',
+      };
+    }
+
+    console.log(
+      `Parsed data: Text="${text}", Type="${type}", HasLink=${hasLink}`
+    );
+
+    // Construct message data
     const messageData = {
-      content: parsedContent,
-      type: messageType,
+      content: text,
+      type: type,
       timestamp: Date.now(),
       hasLink: hasLink,
     };
 
-    if (messageData.type === 'OMNI') {
-      if (messageData.hasLink) {
-        console.log(
-          'OMNI message with link detected. Sending to Telegram only.'
-        );
-        await sendTelegramMessage(messageData);
-      } else {
-        console.log(
-          'OMNI message without link detected. Sending to Telegram and Firebase.'
-        );
-        await sendTelegramMessage(messageData);
-        await db.ref('messages').push(messageData);
-      }
+    if (messageData.type === 'OMNI' && messageData.hasLink) {
+      console.log('OMNI message with link detected. Sending to Telegram only');
+      await sendTelegramMessage(messageData);
     } else {
       console.log(
-        'Non-OMNI message detected. Sending to Telegram and Firebase.'
+        messageData.type === 'OMNI'
+          ? 'OMNI message without link detected. Sending to Telegram and Firebase'
+          : 'KAPS message detected. Sending to Telegram and Firebase'
       );
       await sendTelegramMessage(messageData);
       await db.ref('messages').push(messageData);

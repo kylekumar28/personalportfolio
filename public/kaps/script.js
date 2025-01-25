@@ -29,19 +29,8 @@ const muteSwitch = document.getElementById('mute-switch');
 const testAlertButton = document.getElementById('test');
 const refreshAllClients = document.getElementById('refresh-all-clients');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
-
-const TICKERS_DATA = [
-  { name: 'NQ', tickValue: 5, tickSize: 0.25 },
-  { name: 'ES', tickValue: 12.5, tickSize: 0.25 },
-  { name: 'RTY', tickValue: 5, tickSize: 0.1 },
-  { name: 'YM', tickValue: 5, tickSize: 1 },
-  { name: 'ZS', tickValue: 50, tickSize: 0.25 },
-  { name: 'CL', tickValue: 10, tickSize: 0.01 },
-  { name: 'GC', tickValue: 10, tickSize: 0.1 },
-  { name: 'ZW', tickValue: 50, tickSize: 0.25 },
-  { name: 'BTC', tickValue: 25, tickSize: 5 },
-  { name: 'BP', tickValue: 12.5, tickSize: 0.0001 },
-];
+const messagesContainer = document.getElementById('messages');
+const messagesToggle = document.getElementById('messages-toggle');
 
 let selectedTickers = new Set([
   'NQ',
@@ -67,90 +56,13 @@ let isInitialLoad = true;
 let isMuted = false;
 let lastSeenTimestamp = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const viewToggle = document.getElementsByName('view');
-  const messagesContainer = document.getElementById('messages');
-  const calculatorContainer = document.getElementById('calculator');
-  const tickerSelect = document.getElementById('ticker-select');
-  const tickValueDisplay = document.getElementById('tick-value');
-  const tickSizeDisplay = document.getElementById('tick-size');
-  const entryPriceInput = document.getElementById('entry-price');
-  const stopPriceInput = document.getElementById('stop-price');
-  const calculateLossButton = document.getElementById('calculate-loss');
-  const dollarLossStandardDisplay = document.getElementById(
-    'dollar-loss-standard'
-  );
-  const dollarLossMicroDisplay = document.getElementById('dollar-loss-micro');
-  const tickerChooser = document.getElementById('ticker-chooser');
-
-  // Populate tickers
-  TICKERS_DATA.forEach((ticker) => {
-    const option = document.createElement('option');
-    option.value = ticker.name;
-    option.textContent = ticker.name;
-    tickerSelect.appendChild(option);
-  });
-
-  // View toggle
-  viewToggle.forEach((radio) => {
-    radio.addEventListener('change', () => {
-      if (radio.value === 'messages' && radio.checked) {
-        messagesContainer.style.display = 'block';
-        calculatorContainer.style.display = 'none';
-      } else if (radio.value === 'calculator' && radio.checked) {
-        messagesContainer.style.display = 'none';
-        calculatorContainer.style.display = 'block';
-      } else if (radio.value === 'none' && radio.checked) {
-        messagesContainer.style.display = 'none';
-        calculatorContainer.style.display = 'none';
-      }
-    });
-  });
-
-  // Ticker chooser
-  tickerChooser.addEventListener('change', (event) => {
-    if (event.currentTarget.checked) {
-      tickersFilterDiv.style.display = 'flex';
-    } else if (!event.currentTarget.checked) {
-      tickersFilterDiv.style.display = 'none';
-    }
-  });
-
-  // Update tick info when ticker is selected
-  tickerSelect.addEventListener('change', () => {
-    const selectedTicker = TICKERS_DATA.find(
-      (t) => t.name === tickerSelect.value
-    );
-
-    if (selectedTicker) {
-      tickValueDisplay.textContent = `${selectedTicker.tickValue}`;
-      tickSizeDisplay.textContent = selectedTicker.tickValue;
-    }
-  });
-
-  // Calculate dollar loss
-  calculateLossButton.addEventListener('click', () => {
-    const entryPrice = parseFloat(entryPriceInput.value);
-    const stopPrice = parseFloat(stopPriceInput.value);
-    const selectedTicker = TICKERS_DATA.find(
-      (t) => t.name === tickerSelect.value
-    );
-
-    if (!selectedTicker || isNaN(entryPrice) || isNaN(stopPrice)) {
-      dollarLossStandardDisplay.textContent = 'Invalid Input';
-      dollarLossMicroDisplay.textContent = 'Invalid Input';
-      return;
-    }
-
-    const priceDifference = Math.abs(entryPrice - stopPrice);
-    const tickDifference = priceDifference / selectedTicker.tickSize;
-    const dollarLoss = tickDifference * selectedTicker.tickValue;
-
-    dollarLossStandardDisplay.textContent = `$${dollarLoss.toFixed(2)}`;
-    dollarLossMicroDisplay.textContent = `$${dollarLoss.toFixed(2) / 10}`;
-  });
-
-  tickerSelect.dispatchEvent(new Event('change'));
+// View message history
+messagesToggle.addEventListener('change', (event) => {
+  if (event.currentTarget.checked) {
+    messagesContainer.style.display = 'block';
+  } else if (!event.currentTarget.checked) {
+    messagesContainer.style.display = 'none';
+  }
 });
 
 document.getElementById('dismiss-banner').addEventListener('click', () => {
@@ -275,27 +187,6 @@ function initializeMuteToggle() {
     muteSlider.style.backgroundColor = '#28a745'; // Green for unmuted
   }
 }
-
-// Handle checkbox changes
-tickersFilterDiv.addEventListener('change', (event) => {
-  const checkbox = event.target;
-  const ticker = checkbox.value;
-
-  if (checkbox.checked) {
-    selectedTickers.add(ticker);
-    console.log('Ticker added to filter:', ticker);
-    reloadTickerData(ticker);
-  } else {
-    selectedTickers.delete(ticker);
-    console.log('Ticker removed from filter:', ticker);
-
-    // Remove card for this ticker if it exists
-    if (tickers[ticker]) {
-      tickers[ticker].parentElement.remove();
-      delete tickers[ticker];
-    }
-  }
-});
 
 // Refresh button on click
 refreshAllClients.addEventListener('click', () => {
@@ -550,11 +441,6 @@ function handleMessageForCards(key, messageData) {
   }
 
   // Highlight latest alert
-  // const previousLatestAlert = tickers[ticker].querySelector('.latest-alert');
-  // if (previousLatestAlert) {
-  //   previousLatestAlert.classList.remove('latest-alert'); // Remove highlight from the previous alert
-  // }
-  // alertItem.classList.add('latest-alert'); // Add highlight to the new alert
   if (latestAlertItem) {
     latestAlertItem.classList.remove('latest-alert');
     alertItem.classList.add('latest-alert');

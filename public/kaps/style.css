@@ -41,18 +41,25 @@ body {
 
 #messages-title {
   margin-bottom: 1rem;
+  /* display: flex; */
+  /* justify-content: spa; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #messages {
   /* margin: 20px 20px; */
   max-width: 1280px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #ddd;
   height: 300px;
   max-height: 250px;
   overflow-y: scroll;
   background: #fafafa;
+  font-size: 12px;
 }
 
 button {
@@ -97,10 +104,18 @@ button:hover {
   display: flex;
   /* justify-content: flex-end; */
   align-items: center;
-  justify-self: right;
-  position: absolute;
-  right: 20px;
+  /* justify-self: right; */
+  /* position: absolute; */
+  /* right: 20px; */
+  margin-right: 20px;
   gap: 10px;
+}
+
+#messages-toggle-container {
+  /* justify-self: left; */
+  /* position: absolute; */
+  /* left: 20px; */
+  margin-left: 20px;
 }
 
 .switch {
@@ -350,6 +365,15 @@ input:checked + .slider:before {
   display: flex;
 }
 
+#dismiss-banner {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 #latest-alert-banner.hidden {
   display: none;
 }
@@ -366,6 +390,21 @@ input:checked + .slider:before {
   padding-right: 0.5rem;
   border-right: 1px solid #888;
   margin-right: 0.5rem;
+}
+
+.background {
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+.background p {
+  font-size: 5rem;
+  color: #ddd;
+  font-weight: bold;
 }
 
 /* Dark mode toggle */
@@ -474,4 +513,9 @@ body.dark-mode .card ul li .action-price {
 
 body.dark-mode .card ul li .timestamp {
   color: #aaa; /* Grey for less emphasis */
+}
+
+body.dark-mode #messages {
+  background: #333;
+  color: #ddd;
 }
