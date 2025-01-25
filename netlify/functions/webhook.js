@@ -96,6 +96,7 @@ exports.handler = async (event, context) => {
 
     let parsedContent;
     let messageType = 'STRING';
+    let hasLink = parsedContent.hasLink;
 
     try {
       parsedContent = JSON.parse(rawBody);
@@ -118,31 +119,8 @@ exports.handler = async (event, context) => {
       content: parsedContent,
       type: messageType,
       timestamp: Date.now(),
+      hasLink: hasLink,
     };
-
-    // if (parsedContent.type === 'OMNI') {
-    //   if (parsedContent.hasLink) {
-    //     await sendTelegramMessage(messageData);
-    //   } else {
-    //     await db.ref('messages').push(messageData);
-    //     await sendTelegramMessage(messageData);
-    //   }
-    // } else {
-    //   await db.ref('messages').push(messageData);
-    //   await sendTelegramMessage(messageData);
-    // }
-
-    // await deb.ref('messages').push(messageData);
-
-    // if (!parsedContent.hasLink) {
-    //   await db.ref('messages').push(messageData);
-    // }
-
-    // await db.ref('messages').push(messageData);
-    // console.log('Messaged saved successfully');
-
-    // Send alert to Telegram
-    // await sendTelegramMessage(messageData);
 
     if (messageData.type === 'OMNI') {
       if (messageData.hasLink) {
