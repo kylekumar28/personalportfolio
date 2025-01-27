@@ -80,24 +80,6 @@ body {
 	align-items: center;
 }
 
-@media (max-width: 700px) {
-	#messages-title {
-		flex-direction: column; /* Change layout to column */
-		justify-content: center; /* Center items vertically */
-		align-items: center; /* Align items to the start */
-		gap: 20px;
-	}
-
-	#messages-toggle-container {
-		display: none;
-	}
-
-	.notifier {
-		padding-top: 10px;
-		padding-bottom: 0;
-	}
-}
-
 #messages {
 	/* margin: 20px 20px; */
 	max-width: 1280px;
@@ -239,20 +221,6 @@ input:checked + .slider:before {
 .card-kaps {
 	background-color: #333;
 	color: #fff;
-}
-
-@media (max-width: 768px) {
-	.card {
-		flex: 1 1 calc(50% - 20px); /* 2 cards per row on smaller screens */
-		max-width: calc(50% - 20px);
-	}
-}
-
-@media (max-width: 480px) {
-	.card {
-		flex: 1 1 100%; /* 1 card per row on very small screens */
-		max-width: 100%;
-	}
 }
 
 .card h2 {
@@ -578,4 +546,76 @@ body.dark-mode .card ul li .timestamp {
 body.dark-mode #messages {
 	background: #333;
 	color: #ddd;
+}
+
+/* Media quieries */
+@media (max-width: 700px) {
+	#messages-title {
+		flex-direction: column; /* Change layout to column */
+		justify-content: center; /* Center items vertically */
+		align-items: center; /* Align items to the start */
+		gap: 20px;
+	}
+
+	#messages-toggle-container {
+		display: none;
+	}
+
+	.notifier {
+		padding-top: 10px;
+		padding-bottom: 0;
+	}
+
+	#cards-container {
+		display: grid;
+		flex-wrap: wrap;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-auto-flow: column;
+		gap: 10px;
+		margin: 0 auto;
+		margin-top: 2rem;
+		/* border: 1px solid white; */
+	}
+
+	.card {
+		width: 100%;
+	}
+}
+
+@media (max-width: 475px) {
+	.helper {
+		display: none;
+	}
+
+	#messages-title {
+		flex-direction: column; /* Change layout to column */
+		justify-content: center; /* Center items vertically */
+		align-items: center; /* Align items to the start */
+		gap: 20px;
+	}
+
+	#messages-toggle-container {
+		display: none;
+	}
+
+	.notifier {
+		padding-top: 10px;
+		padding-bottom: 0;
+	}
+
+	#cards-container {
+		display: grid;
+		flex-wrap: wrap;
+		grid-template-columns: repeat(1, minmax(0, 1fr));
+		/* gap: 10px; */
+		margin: 0 auto;
+		margin-left: 1rem;
+		margin-right: 1rem;
+		margin-top: 2rem;
+		/* border: 1px solid white; */
+	}
+
+	.card {
+		width: 100%;
+	}
 }
