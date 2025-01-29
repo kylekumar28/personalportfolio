@@ -32,6 +32,25 @@ const darkModeToggle = document.getElementById("dark-mode-toggle");
 const messagesContainer = document.getElementById("messages");
 const messagesToggle = document.getElementById("messages-toggle");
 
+const tickerNames = {
+	NQ: "Nasdaq",
+	ES: "S&P 500",
+	RTY: "Russell 2000",
+	YM: "Dow Jones",
+	ZS: "Soybeans",
+	CL: "Crude Oil",
+	GC: "Gold",
+	ZW: "Wheat",
+	BTC: "Bitcoin",
+	BP: "British Pound",
+	NG: "Natural Gas",
+	LE: "Live Cattle",
+	PL: "Platinum",
+	ZC: "Corn",
+	SI: "Silver",
+	"6E": "Euro FX",
+};
+
 let selectedTickers = new Set([
 	"NQ",
 	"ES",
@@ -425,11 +444,16 @@ function handleMessageForCards(key, messageData) {
 		return;
 	}
 
+	// Get ticker name
+	let displayTicker = tickerNames[ticker]
+		? `${ticker} (${tickerNames[ticker]})`
+		: ticker;
+
 	// Create or update a card for the ticker
 	if (!tickers[ticker]) {
 		const card = document.createElement("div");
 		card.className = `card ${cardClass}`;
-		card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
+		card.innerHTML = `<h2>${displayTicker}</h2><ul></ul>`;
 		cardsContainer.appendChild(card);
 		tickers[ticker] = card.querySelector("ul");
 	}
