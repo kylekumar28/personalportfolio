@@ -128,7 +128,7 @@ exports.handler = async (event, context) => {
 			content: parsedText,
 			type: parsedType,
 			timestamp: Date.now(),
-			hasLink: parsedHasLink,
+			hasLink: parsedHasLink ? parsedHasLink : false,
 		};
 
 		if (messageData.type === "OMNI" && messageData.hasLink) {
