@@ -120,7 +120,7 @@ exports.handler = async (event, context) => {
 		}
 
 		console.log(
-			`Parsed data: Text="${text}", Type="${type}", HasLink=${hasLink}`
+			`Parsed data: Text="${parsedText}", Type="${parsedType}", HasLink=${parsedHasLink}`
 		);
 
 		// Construct message data
