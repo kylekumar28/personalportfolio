@@ -107,7 +107,7 @@ exports.handler = async (event, context) => {
 		} catch (error) {
 			parsedText = rawBody;
 			parsedType = "STRING";
-			hasLink = false;
+			parsedHasLink = false;
 		}
 
 		if (!parsedText || !parsedType) {
