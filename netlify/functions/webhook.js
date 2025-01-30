@@ -125,10 +125,10 @@ exports.handler = async (event, context) => {
 
 		// Construct message data
 		const messageData = {
-			content: text,
-			type: type,
+			content: parsedText,
+			type: parsedType,
 			timestamp: Date.now(),
-			hasLink: hasLink,
+			hasLink: parsedHasLink,
 		};
 
 		if (messageData.type === "OMNI" && messageData.hasLink) {
