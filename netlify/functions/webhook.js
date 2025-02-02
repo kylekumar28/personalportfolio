@@ -153,7 +153,7 @@ exports.handler = async (event, context) => {
 			const parts = parsedText.split(" - ");
 			if (parts.length === 3) {
 				[parsedTicker, parsedAction, parsedPrice] = parts;
-				parsedHelper = TICKER_NAMES[ticker] || "";
+				parsedHelper = TICKER_NAMES[parsedTicker] || "";
 			} else {
 				console.warn(
 					"Invalid KAPS format, skipping processing:",
