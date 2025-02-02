@@ -381,6 +381,16 @@ db.ref("messages")
 						pauseButton.textContent = "Stop Sound";
 						pauseButton.classList.add("active");
 						pauseButton.disabled = false;
+					} else {
+						console.log("Something went wrong");
+						console.log(
+							"isInitialLoad",
+							isInitialLoad,
+							"isMuted",
+							isMuted,
+							"soundPlaying",
+							soundPlaying
+						);
 					}
 				} else {
 					console.log(`Ticker ${ticker} is not selected. No sound.`);
@@ -467,7 +477,7 @@ function handleMessageForCards(key, messageData) {
 	if (!tickers[ticker]) {
 		const card = document.createElement("div");
 		card.className = `card ${cardClass}`;
-		card.innerHTML = `<h2>${ticker} (${helper || ""})</h2><ul></ul>`;
+		card.innerHTML = `<h2>${displayTicker}</h2><ul></ul>`;
 		cardsContainer.appendChild(card);
 		tickers[ticker] = card.querySelector("ul");
 	}
