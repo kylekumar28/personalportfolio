@@ -477,7 +477,7 @@ function handleMessageForCards(key, messageData) {
 	if (!tickers[ticker]) {
 		const card = document.createElement("div");
 		card.className = `card ${cardClass}`;
-		card.innerHTML = `<h2>${displayTicker}</h2><ul></ul>`;
+		card.innerHTML = `<h2>${ticker}</h2><ul></ul>`;
 		cardsContainer.appendChild(card);
 		tickers[ticker] = card.querySelector("ul");
 	}
