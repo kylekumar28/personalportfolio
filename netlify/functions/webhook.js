@@ -61,11 +61,11 @@ async function sendTelegramMessage(messageData, hasLink = false) {
 	if (messageData.type === "OMNI") {
 		if (hasLink) text = `📷 OSKAR Video: ${messageData.content}`;
 		else {
-			text = `⭐ OSKAR Alert: ${messageData.content}`;
+			text = `⭐ OSKAR: ${messageData.content}`;
 		}
 	} else {
 		// text = `🚨 KAPS Alert: ${messageData.content}`;
-		text = `🚨 KAPS Alert: ${messageData.ticker} (${messageData.helper} - ${messageData.action} - ${messageData.price})`;
+		text = `🚨 KAPS: ${messageData.ticker} (${messageData.helper}) - ${messageData.action} - ${messageData.price}`;
 	}
 
 	try {
