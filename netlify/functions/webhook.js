@@ -7,6 +7,27 @@ const TELEGRAM_BOT_TOKEN = "7893479762:AAEROtIQGKd1dJpk7MbO0tMWydoBCUxaL70";
 const TELEGRAM_CHAT_ID = "1688623031";
 const TELEGRAM_GROUP_ID = "-4712121548";
 
+const TICKER_NAMES = {
+	NQ: "Nasdaq",
+	ES: "S&P 500",
+	RTY: "Russell 2000",
+	YM: "Dow Jones",
+	ZS: "Soybeans",
+	CL: "Crude Oil",
+	GC: "Gold",
+	ZW: "Wheat",
+	BTC: "Bitcoin",
+	BP: "British Pound",
+	NG: "Natural Gas",
+	LE: "Live Cattle",
+	PL: "Platinum",
+	ZC: "Corn",
+	SI: "Silver",
+	"6E": "Euro FX",
+	HG: "Copper",
+	TEST: "Test",
+};
+
 // Initialise Firebase SDK
 function initializeFirebase() {
 	try {
@@ -34,13 +55,17 @@ function initializeFirebase() {
 const db = initializeFirebase();
 
 // Function to send Telegram message
-async function sendTelegramMessage(messageData) {
+async function sendTelegramMessage(messageData, hasLink = false) {
 	let text = "";
 
 	if (messageData.type === "OMNI") {
-		text = `🚨 KAPS Alert: ${messageData.content}`;
+		if (hasLink) text = `📷 OSKAR Video: ${messageData.content}`;
+		else {
+			text = `⭐ OSKAR Alert: ${messageData.content}`;
+		}
 	} else {
-		text = `🚨 KAPS Alert: ${messageData.content}`;
+		// text = `🚨 KAPS Alert: ${messageData.content}`;
+		text = `🚨 KAPS Alert: ${messageData.ticker} (${messageData.helper} - ${messageData.action} - ${messageData.price})`;
 	}
 
 	try {
@@ -97,6 +122,7 @@ exports.handler = async (event, context) => {
 
 		let parsedBody;
 		let parsedText, parsedType, parsedHasLink;
+		let parsedTicker, parsedAction, parsedPrice, parsedHelper;
 
 		try {
 			parsedBody = JSON.parse(rawBody);
@@ -123,26 +149,48 @@ exports.handler = async (event, context) => {
 			`Parsed data: Text="${parsedText}", Type="${parsedType}", HasLink=${parsedHasLink}`
 		);
 
+		if (parsedType === "STRING") {
+			const parts = parsedText.split(" - ");
+			if (parts.length === 3) {
+				[parsedTicker, parsedAction, parsedPrice] = parts;
+				parsedHelper = TICKER_NAMES[ticker] || "";
+			} else {
+				console.warn(
+					"Invalid KAPS format, skipping processing:",
+					parsedText
+				);
+				return {
+					statusCode: 400,
+					headers,
+					body: "Invalid format: Expected TICKER - ACTION - PRICE",
+				};
+			}
+		}
+
 		// Construct message data
 		const messageData = {
 			content: parsedText,
 			type: parsedType,
 			timestamp: Date.now(),
 			hasLink: parsedHasLink ? parsedHasLink : false,
+			helper: parsedHelper || null,
+			ticker: parsedTicker || null,
+			action: parsedAction || null,
+			price: parsedPrice || null,
 		};
 
 		if (messageData.type === "OMNI" && messageData.hasLink) {
 			console.log(
 				"OMNI message with link detected. Sending to Telegram only"
 			);
-			await sendTelegramMessage(messageData);
+			await sendTelegramMessage(messageData, true);
 		} else {
 			console.log(
 				messageData.type === "OMNI"
 					? "OMNI message without link detected. Sending to Telegram and Firebase"
 					: "KAPS message detected. Sending to Telegram and Firebase"
 			);
-			await sendTelegramMessage(messageData);
+			await sendTelegramMessage(messageData, false);
 			await db.ref("messages").push(messageData);
 		}
 

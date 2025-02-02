@@ -32,24 +32,24 @@ const darkModeToggle = document.getElementById("dark-mode-toggle");
 const messagesContainer = document.getElementById("messages");
 const messagesToggle = document.getElementById("messages-toggle");
 
-const tickerNames = {
-	NQ: "Nasdaq",
-	ES: "S&P 500",
-	RTY: "Russell 2000",
-	YM: "Dow Jones",
-	ZS: "Soybeans",
-	CL: "Crude Oil",
-	GC: "Gold",
-	ZW: "Wheat",
-	BTC: "Bitcoin",
-	BP: "British Pound",
-	NG: "Natural Gas",
-	LE: "Live Cattle",
-	PL: "Platinum",
-	ZC: "Corn",
-	SI: "Silver",
-	"6E": "Euro FX",
-};
+// const tickerNames = {
+// 	NQ: "Nasdaq",
+// 	ES: "S&P 500",
+// 	RTY: "Russell 2000",
+// 	YM: "Dow Jones",
+// 	ZS: "Soybeans",
+// 	CL: "Crude Oil",
+// 	GC: "Gold",
+// 	ZW: "Wheat",
+// 	BTC: "Bitcoin",
+// 	BP: "British Pound",
+// 	NG: "Natural Gas",
+// 	LE: "Live Cattle",
+// 	PL: "Platinum",
+// 	ZC: "Corn",
+// 	SI: "Silver",
+// 	"6E": "Euro FX",
+// };
 
 let selectedTickers = new Set([
 	"NQ",
@@ -68,6 +68,8 @@ let selectedTickers = new Set([
 	"ZC",
 	"SI",
 	"6E",
+	"HG",
+	"TEST",
 ]); // Default: All selected
 let allMessages = [];
 let soundPlaying = false;
@@ -391,7 +393,15 @@ let latestAlertItem;
 
 // Handle messages for ticker cards
 function handleMessageForCards(key, messageData) {
-	let { content, type = "STRING", timestamp } = messageData;
+	let {
+		content,
+		type = "STRING",
+		timestamp,
+		helper,
+		ticker,
+		action,
+		price,
+	} = messageData;
 
 	if (content === "NEW DAY") {
 		lastNewDayKey = key;
@@ -409,7 +419,7 @@ function handleMessageForCards(key, messageData) {
 
 	console.log(`Processing message: ${messageData.content}, Key: ${key}`);
 
-	let ticker;
+	// let ticker, action, price;
 	let cardClass;
 
 	if (type === "OMNI") {
@@ -425,18 +435,22 @@ function handleMessageForCards(key, messageData) {
 		selectedTickers.add(ticker);
 	} else {
 		// Validate message format
-		const parts = messageData.content.split(" - ");
-		console.log("parts", parts);
-		if (parts.length === 3) {
-			ticker = parts[0];
-			cardClass = "card-default";
-		} else {
-			console.warn(
-				"Invalid message format for STRING type. Skipping:",
-				content
-			);
-			return;
-		}
+		// const parts = messageData.content.split(" - ");
+		// console.log("parts", parts);
+		// if (parts.length === 3) {
+		// 	ticker = parts[0];
+		// 	cardClass = "card-default";
+		// } else {
+		// 	console.warn(
+		// 		"Invalid message format for STRING type. Skipping:",
+		// 		content
+		// 	);
+		// 	return;
+		// }
+		helper = messageData.helper;
+		ticker = messageData.ticker;
+		action = messageData.action;
+		price = messageData.price;
 	}
 
 	if (!selectedTickers.has(ticker)) {
@@ -445,15 +459,15 @@ function handleMessageForCards(key, messageData) {
 	}
 
 	// Get ticker name
-	let displayTicker = tickerNames[ticker]
-		? `${ticker} (${tickerNames[ticker]})`
-		: ticker;
+	// let displayTicker = tickerNames[ticker]
+	// 	? `${ticker} (${tickerNames[ticker]})`
+	// 	: ticker;
 
 	// Create or update a card for the ticker
 	if (!tickers[ticker]) {
 		const card = document.createElement("div");
 		card.className = `card ${cardClass}`;
-		card.innerHTML = `<h2>${displayTicker}</h2><ul></ul>`;
+		card.innerHTML = `<h2>${ticker} (${helper || ""})</h2><ul></ul>`;
 		cardsContainer.appendChild(card);
 		tickers[ticker] = card.querySelector("ul");
 	}
@@ -466,7 +480,7 @@ function handleMessageForCards(key, messageData) {
              <span class="" style="">${formatTimestamp(timestamp)} - </span>
         <span class="action-price">${""}</span> <span>${""}</span> <span class="">${content}</span></p>`;
 	} else {
-		const [_, action, price] = content.split(" - ");
+		// const [_, action, price] = content.split(" - ");
 		alertItem.innerHTML = `
         <span class="action-price">${action}</span> <span>${" @ "}</span> <span class="action-price">${price}</span>
         <span class="timestamp" style="margin-left: 10px">${formatTimestamp(
