@@ -32,7 +32,9 @@ const TICKER_NAMES = {
 function initializeFirebase() {
 	try {
 		console.log("Initializing Firebase");
-		const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+		const serviceAccount = JSON.parse(
+			process.env.FIREBASE_SERVICE_ACCOUNT_TEST
+		);
 
 		admin.initializeApp({
 			credential: admin.credential.cert(serviceAccount),
