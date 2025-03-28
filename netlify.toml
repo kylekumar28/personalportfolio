@@ -6,3 +6,8 @@ functions = "netlify/functions"
 from = "/webhook"
 to = "/.netlify/functions/webhook"
 status = 200
+
+[[redirects]]
+from = "/webhook-test"
+to = "/.netlify/functions/webhook-test"
+status = 200
