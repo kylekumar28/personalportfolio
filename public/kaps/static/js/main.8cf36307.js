@@ -26189,7 +26189,7 @@
             children: [
               (0, Wn.jsx)('audio', {
                 ref: i,
-                src: './kaps/audio/bell.wav',
+                src: './audio/bell.wav',
                 loop: !0,
                 preload: 'auto',
               }),
