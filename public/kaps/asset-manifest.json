@@ -1,13 +1,14 @@
 {
   "files": {
     "main.css": "/kaps/static/css/main.1a7fc6ff.css",
-    "main.js": "/kaps/static/js/main.8cf36307.js",
+    "main.js": "/kaps/static/js/main.586da52c.js",
+    "static/media/bell.wav": "/kaps/static/media/bell.41d0783ef7220df84266.wav",
     "index.html": "/kaps/index.html",
     "main.1a7fc6ff.css.map": "/kaps/static/css/main.1a7fc6ff.css.map",
-    "main.8cf36307.js.map": "/kaps/static/js/main.8cf36307.js.map"
+    "main.586da52c.js.map": "/kaps/static/js/main.586da52c.js.map"
   },
   "entrypoints": [
     "static/css/main.1a7fc6ff.css",
-    "static/js/main.8cf36307.js"
+    "static/js/main.586da52c.js"
   ]
 }
