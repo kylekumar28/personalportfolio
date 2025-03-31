@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>KAPS</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+		/>
+		<link rel="stylesheet" href="main.css" />
+	</head>
+	<body class="dark-mode">
+		<div class="main-container">
+			<div class="col-1">
+				<button id="test">Test</button>
+				<div id="dark-mode-toggle">
+					<div>
+						<input
+							type="checkbox"
+							class="checkbox"
+							id="checkbox"
+							checked
+						/>
+						<label for="checkbox" class="checkbox-label">
+							<i class="fas fa-moon"></i>
+							<i class="fas fa-sun"></i>
+							<span class="ball"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-2">
+				<div class="helper">
+					<p style="font-size: 14px">
+						<span>NQ - Nasdaq</span>
+						<span>ES - S&P</span>
+						<span>RTY - Russell</span>
+						<span>YM - Dow</span>
+						<span>CL - Crude Oil</span>
+						<span>GC - Gold</span>
+						<span>SI - Silver</span>
+						<span>PL - Platinum</span>
+						<span>ZS - Soybeans</span>
+						<span>ZW - Wheat</span>
+						<span>ZC - Corn</span>
+						<!-- <span>NG - Natural Gas</span>
+                <span>LE - Live Cattle</span> -->
+					</p>
+				</div>
+
+				<div class="notifier">
+					<div id="messages-title">
+						<div id="messages-toggle-container">
+							<label>
+								<input
+									id="messages-toggle"
+									type="checkbox"
+									value="MessagesToggle"
+								/>
+								Messages
+							</label>
+						</div>
+
+						<button id="alert-button" disabled>
+							No New Alerts
+						</button>
+
+						<div id="mute-toggle">
+							<p>Unmuted</p>
+							<label class="switch">
+								<input type="checkbox" id="mute-switch" />
+								<span class="slider"></span>
+							</label>
+							<p>Muted</p>
+						</div>
+					</div>
+
+					<div id="messages" style="display: none"></div>
+				</div>
+			</div>
+
+			<div class="col-3">
+				<div id="connection-status" class="badge">Disconnected</div>
+				<button id="new-day">New Day</button>
+				<button id="refresh-all-clients">Refresh</button>
+			</div>
+		</div>
+
+		<div id="latest-alert-banner" class="hidden">
+			<button id="dismiss-banner">✕</button>
+			<p id="latest-alert-text"></p>
+		</div>
+
+		<div id="cards-container"></div>
+
+		<audio id="notification-sound" src="beep (1).wav" loop></audio>
+
+		<div class="background">
+			<p>KAPS - Kumar Analytics & Profit System</p>
+		</div>
+
+		<!-- Firebase App SDK -->
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+		<!-- Firebase Database SDK -->
+		<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+		<!-- Local script -->
+		<script src="script.js"></script>
+	</body>
+</html>

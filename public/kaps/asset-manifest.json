@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/kaps/static/css/main.1a7fc6ff.css",
+    "main.js": "/kaps/static/js/main.8cf36307.js",
+    "index.html": "/kaps/index.html",
+    "main.1a7fc6ff.css.map": "/kaps/static/css/main.1a7fc6ff.css.map",
+    "main.8cf36307.js.map": "/kaps/static/js/main.8cf36307.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1a7fc6ff.css",
+    "static/js/main.8cf36307.js"
+  ]
+}
